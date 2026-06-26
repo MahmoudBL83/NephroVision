@@ -727,10 +727,8 @@ Visual pipeline walkthrough. Left to right: NIfTI input  preprocessing (HU clipp
      ============================================================ -->
 <SectionTitle number="04" title="Pipeline Architecture" subtitle="End-to-end system diagram with component details" />
 <div style="margin-top: 0.8rem;">
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">Detailed System Architecture</div>
-    <div class="nv-placeholder-desc">Block diagram: NIfTI Loader → HU Clipper → Normalizer → 3D U-Net → Sliding Window Engine → TTA Averager → Blob Filter → Volume Calculator → 3D Mesher → Web API → Browser</div>
-    <div class="nv-placeholder-hint">Generate with draw.io or similar — show all 10+ components with data flow arrows</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/pipeline_architecture.png" alt="End-to-end pipeline architecture" style="width: 100%; height: auto; max-height: 180px; object-fit: contain;" />
   </div>
 </div>
 <div style="margin-top: 0.8rem; display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center;">
@@ -869,19 +867,17 @@ Before/after histograms showing why HU clipping matters. The raw histogram is do
 <div class="nv-two-col" style="margin-top: 0.8rem;">
 <div>
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #1e3a5f; margin-bottom: 0.4rem; text-align: center;">Raw CT Slice</div>
-  <div class="nv-placeholder" style="height: 140px;">
-    <div class="nv-placeholder-label">Original CT</div>
-    <div class="nv-placeholder-desc">Full HU range — bone bright, air dark, soft tissue mid-gray</div>
-    <div class="nv-placeholder-hint">Use actual KiTS23 slice — show kidney and tumor in native CT</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.5rem;">
+    <img src="/images/before_clipping.png" alt="Original CT slice with full HU range" style="width: 100%; height: auto; max-height: 160px; object-fit: contain;" />
   </div>
+  <div style="margin-top: 0.4rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">Full HU range — bone dominates histogram</div>
 </div>
 <div>
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #2d6a4f; margin-bottom: 0.4rem; text-align: center;">After Preprocessing</div>
-  <div class="nv-placeholder" style="height: 140px;">
-    <div class="nv-placeholder-label">Normalized Input</div>
-    <div class="nv-placeholder-desc">Clipped to [-200, 300] and normalized [0, 1] — enhanced soft tissue contrast</div>
-    <div class="nv-placeholder-hint">Same slice after preprocessing — kidney and tumor boundaries more distinct</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.5rem;">
+    <img src="/images/after_clipping.png" alt="Preprocessed CT slice with clipped HU" style="width: 100%; height: auto; max-height: 160px; object-fit: contain;" />
   </div>
+  <div style="margin-top: 0.4rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">Clipped [-200, 300] — soft tissue enhanced</div>
 </div>
 </div>
 <div class="nv-card nv-card-cyan" style="margin-top: 0.8rem;">
@@ -988,10 +984,8 @@ Detailed architecture slide with placeholder for layer-by-layer diagram. Mini ca
 <SectionTitle number="06" title="Skip Connections" subtitle="Preserving fine detail from encoder to decoder" />
 <div class="nv-two-col" style="margin-top: 0.8rem; align-items: center;">
 <div>
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">Skip Connection Diagram</div>
-    <div class="nv-placeholder-desc">Visual showing encoder feature map (high res, low semantic) concatenated with decoder upsampled map (low res, high semantic)</div>
-    <div class="nv-placeholder-hint">Simple U-shape diagram with highlighted skip arrows and concatenation blocks</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/skip_connections.png" alt="Skip connection diagram showing encoder-decoder feature concatenation" style="width: 100%; height: auto; max-height: 200px; object-fit: contain;" />
   </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 0.5rem;">
@@ -1114,10 +1108,8 @@ Full CT volumes exceed GPU memory. Sliding window: 64×192×192 patches with 50%
      ============================================================ -->
 <SectionTitle number="07" title="Sliding Window" subtitle="How we process volumes larger than GPU memory" />
 <div style="margin-top: 0.8rem;">
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">Sliding Window Animation / Diagram</div>
-    <div class="nv-placeholder-desc">Diagram showing a large CT volume being divided into overlapping 64×192×192 patches, processed sequentially, then fused back</div>
-    <div class="nv-placeholder-hint">Use simple block diagram — large volume → grid of patches → GPU → predictions → fused volume</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/sliding_window_diagram.png" alt="Sliding window diagram showing volume divided into overlapping patches" style="width: 100%; height: auto; max-height: 200px; object-fit: contain;" />
   </div>
 </div>
 <div class="nv-three-col" style="margin-top: 0.8rem;">
@@ -1142,10 +1134,8 @@ Visual explanation of sliding window. Show how a large volume is broken into pat
      ============================================================ -->
 <SectionTitle number="07" title="Test-Time Augmentation" subtitle="8 orientations, 8 predictions, 1 average" />
 <div style="margin-top: 0.8rem;">
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">TTA 8-Flip Grid</div>
-    <div class="nv-placeholder-desc">2×4 grid showing original + 7 flipped versions of a CT slice, with arrows showing flip axes</div>
-    <div class="nv-placeholder-hint">Generate with matplotlib — 8 small subplots, each labeled with flip combination (x, y, z, xy, xz, yz, xyz)</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/tta_grid.png" alt="TTA 8-flip grid showing original and 7 flipped orientations" style="width: 100%; height: auto; max-height: 220px; object-fit: contain;" />
   </div>
 </div>
 <div class="nv-two-col" style="margin-top: 0.8rem;">
@@ -1217,25 +1207,10 @@ Post-processing removes spurious detections. Kidney: &lt;5000 voxels removed —
 
      ============================================================ -->
 <SectionTitle number="07" title="Post-Processing Effect" subtitle="Before and after conservative blob removal" />
-<div class="nv-two-col" style="margin-top: 0.8rem;">
-<div>
-  <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #1e3a5f; margin-bottom: 0.4rem; text-align: center;">Before Post-Processing</div>
-  <div class="nv-placeholder" style="height: 140px;">
-    <div class="nv-placeholder-label">Raw Model Output</div>
-    <div class="nv-placeholder-desc">Raw prediction with small false-positive blobs scattered in background</div>
-    <div class="nv-placeholder-hint">Show CT slice overlay — red false positives outside kidney</div>
+<div style="margin-top: 0.8rem;">
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/postprocessing_before_after.png" alt="Before and after post-processing comparison" style="width: 100%; height: auto; max-height: 220px; object-fit: contain;" />
   </div>
-  <div style="margin-top: 0.4rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">Small noise blobs visible outside kidney</div>
-</div>
-<div>
-  <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #2d6a4f; margin-bottom: 0.4rem; text-align: center;">After Post-Processing</div>
-  <div class="nv-placeholder" style="height: 140px;">
-    <div class="nv-placeholder-label">Cleaned Mask</div>
-    <div class="nv-placeholder-desc">After blob removal — noise eliminated, true detections preserved</div>
-    <div class="nv-placeholder-hint">Same slice — cleaned overlay, green = kidney, orange = tumor</div>
-  </div>
-  <div style="margin-top: 0.4rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">Noise removed, true lesions preserved</div>
-</div>
 </div>
 <div class="nv-three-col" style="margin-top: 0.8rem;">
 <MetricCard label="Kidney Blobs Removed" value="&lt;5000" subvalue="voxels threshold" status="info" />
@@ -1372,10 +1347,8 @@ EMPHASIS SLIDE — 90 seconds. The most important honesty slide. Why is tumor Di
 </div>
 </div>
 <div>
-<div class="nv-placeholder" style="height: 160px;">
-  <div class="nv-placeholder-label">Web App Screenshot</div>
-  <div class="nv-placeholder-desc">Browser interface showing 3D viewer + stats panel</div>
-  <div class="nv-placeholder-hint">Replace with actual screenshot before defense</div>
+<div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.5rem; border-radius: 6px;">
+  <img src="/images/webapp_mockup.png" alt="Web application interface mockup showing 3D viewer and statistics panel" style="width: 100%; height: auto; max-height: 200px; object-fit: contain;" />
 </div>
 <div style="margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.4rem;">
   <SafetyBadge label="Academic Prototype Disclaimer" status="warning" />
@@ -1515,18 +1488,14 @@ THE MONEY SLIDE — 60 seconds. Walk through the numbers. Kidney Dice 0.9307 ± 
 <SectionTitle number="09" title="Metric Distribution" subtitle="Per-case variability across the 64 test cases" />
 <div class="nv-two-col" style="margin-top: 0.8rem;">
 <div>
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">Dice Score Box Plot</div>
-    <div class="nv-placeholder-desc">Box plot per case: Kidney Dice (tight, high) vs Tumor Dice (wide, lower)</div>
-    <div class="nv-placeholder-hint">Generate with matplotlib — show median, quartiles, outliers</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.5rem; border-radius: 6px;">
+    <img src="/images/dice_boxplot.png" alt="Dice score box plot comparing kidney and tumor distributions" style="width: 100%; height: auto; max-height: 200px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">Kidney Dice: tight distribution (σ=0.064) · Tumor Dice: wide (σ=0.262)</div>
 </div>
 <div>
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">HD95 Box Plot</div>
-    <div class="nv-placeholder-desc">Box plot per case: HD95 Kidney (low) vs HD95 Tumor (high, variable)</div>
-    <div class="nv-placeholder-hint">Generate with matplotlib — log scale may help</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.5rem; border-radius: 6px;">
+    <img src="/images/hd95_boxplot.png" alt="HD95 box plot comparing kidney and tumor boundary distances" style="width: 100%; height: auto; max-height: 200px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #8a8a8a; text-align: center;">HD95 Tumor: highly variable (up to ~150 mm in worst case)</div>
 </div>
@@ -1576,10 +1545,8 @@ Visual distinction between detection and segmentation. Detection grid: 64 green 
      ============================================================ -->
 <SectionTitle number="09" title="Kidney-Tumor Correlation" subtitle="Is good kidney segmentation predictive of good tumor segmentation?" />
 <div style="margin-top: 0.8rem;">
-  <div class="nv-placeholder" style="height: 200px;">
-    <div class="nv-placeholder-label">Scatter Plot: Kidney Dice vs Tumor Dice</div>
-    <div class="nv-placeholder-desc">Each point = one test case. X-axis: Kidney Dice. Y-axis: Tumor Dice. Color by tumor size.</div>
-    <div class="nv-placeholder-hint">Generate with matplotlib — add regression line, R² value, colorbar for tumor volume</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/kidney_tumor_scatter.png" alt="Scatter plot of kidney dice vs tumor dice per case" style="width: 100%; height: auto; max-height: 240px; object-fit: contain;" />
   </div>
 </div>
 <div class="nv-two-col" style="margin-top: 0.8rem;">
@@ -1778,25 +1745,22 @@ EMPHASIS SLIDE — 75 seconds. Directly addresses mid-year feedback about docume
 <div class="nv-three-col" style="margin-top: 0.8rem;">
 <div class="nv-card" style="padding: 0.8rem;">
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bc4b31; margin-bottom: 0.4rem;">FC-001: Boundary Leakage</div>
-  <div class="nv-placeholder" style="height: 100px;">
-    <div class="nv-placeholder-label">Case 0042</div>
-    <div class="nv-placeholder-desc">Infiltrative tumor — predicted mask extends 18 voxels beyond true boundary</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.3rem; border-radius: 4px;">
+    <img src="/images/failure_case_001.png" alt="Failure case 001 showing boundary leakage" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.4rem; font-size: 0.78rem; color: #8a8a8a;">Tumor Dice: 0.52 · HD95: 78 mm</div>
 </div>
 <div class="nv-card" style="padding: 0.8rem;">
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bc4b31; margin-bottom: 0.4rem;">FC-002: Small Lesion</div>
-  <div class="nv-placeholder" style="height: 100px;">
-    <div class="nv-placeholder-label">Case 0017</div>
-    <div class="nv-placeholder-desc">120-voxel hypodense lesion — under-segmented to 45% of true volume</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.3rem; border-radius: 4px;">
+    <img src="/images/failure_case_002.png" alt="Failure case 002 showing small lesion under-segmentation" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.4rem; font-size: 0.78rem; color: #8a8a8a;">Tumor Dice: 0.38 · HD95: 85 mm</div>
 </div>
 <div class="nv-card" style="padding: 0.8rem;">
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #bc4b31; margin-bottom: 0.4rem;">FC-003: Cyst Confusion</div>
-  <div class="nv-placeholder" style="height: 100px;">
-    <div class="nv-placeholder-label">Case 0058</div>
-    <div class="nv-placeholder-desc">Large simple cyst — correctly segmented but labeled as Tumor/Cyst</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.3rem; border-radius: 4px;">
+    <img src="/images/failure_case_003.png" alt="Failure case 003 showing cyst mislabeled as tumor" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.4rem; font-size: 0.78rem; color: #8a8a8a;">Tumor Dice: 0.82 · Cannot distinguish benign</div>
 </div>
@@ -1819,10 +1783,8 @@ Three concrete failure cases shown as visual cards. Each has a placeholder for t
 <SectionTitle number="10" title="Domain Shift Risk" subtitle="The highest-priority limitation" />
 <div class="nv-two-col" style="margin-top: 0.8rem;">
 <div>
-  <div class="nv-placeholder" style="height: 160px;">
-    <div class="nv-placeholder-label">Scanner Variability Concept</div>
-    <div class="nv-placeholder-desc">Diagram showing same anatomy scanned by 3 different scanners with different contrast, noise, resolution</div>
-    <div class="nv-placeholder-hint">Use simplified icons — CT scanner A/B/C with different kernel symbols</div>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/scanner_variability.png" alt="Scanner variability concept showing different CT scanners producing different intensity distributions" style="width: 100%; height: auto; max-height: 180px; object-fit: contain;" />
   </div>
   <div style="margin-top: 0.6rem; font-size: 0.82rem; color: #4a4a4a; line-height: 1.5;">
     Model trained on <strong style="color: #1a1a1a;">KiTS23 only</strong>. Performance on Siemens, GE, Philips, or different protocols is <strong style="color: #1a1a1a;">unknown</strong>.
