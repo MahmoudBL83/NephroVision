@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .label { font-size: 11px; font-weight: 600; fill: #8a8a8a; text-anchor: middle; }
+      .value { font-size: 32px; font-weight: 800; text-anchor: middle; }
+      .desc { font-size: 12px; font-weight: 400; fill: #4a4a4a; text-anchor: middle; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">Class Imbalance in KiTS23</text>
+  <text x="480" y="82" class="subtitle">Why tumor segmentation is fundamentally difficult</text>
+
+  <!-- Background block -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="140" width="240" height="280" rx="16" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="360" y="200" width="240" height="220" rx="16" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="640" y="280" width="240" height="140" rx="16" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+  </g>
+
+  <!-- Background: ~99% -->
+  <text x="200" y="210" class="value" style="fill: #1a1a1a;">~99%</text>
+  <text x="200" y="250" class="desc">Background</text>
+  <text x="200" y="275" class="label">Vast majority of voxels</text>
+  <text x="200" y="340" class="desc" style="font-size: 10px; fill: #8a8a8a;">A model predicting "all background"</text>
+  <text x="200" y="360" class="desc" style="font-size: 10px; fill: #8a8a8a;">achieves 99% accuracy</text>
+  <text x="200" y="380" class="desc" style="font-size: 10px; fill: #8a8a8a;">and misses every tumor</text>
+
+  <!-- Kidney: <1% -->
+  <text x="480" y="270" class="value" style="fill: #1e3a5f;">&lt;1%</text>
+  <text x="480" y="310" class="desc">Kidney</text>
+  <text x="480" y="335" class="label">Tens of thousands of voxels</text>
+
+  <!-- Tumor: <0.1% -->
+  <text x="760" y="350" class="value" style="fill: #bc4b31;">&lt;0.1%</text>
+  <text x="760" y="390" class="desc">Tumor / Cyst</text>
+  <text x="760" y="410" class="label">Hundreds to thousands of voxels</text>
+
+  <!-- Footer -->
+  <text x="480" y="480" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Class imbalance justifies: Dice loss + conservative post-processing + sensitivity over precision</text>
+</svg>

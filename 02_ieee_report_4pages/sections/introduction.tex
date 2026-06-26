@@ -1,0 +1,11 @@
+\section{Introduction}
+
+Renal cell carcinoma accounts for approximately 90\% of kidney cancers. Contrast-enhanced CT is the primary imaging modality for renal tumor assessment, providing anatomical detail for diagnosis, surgical planning, and treatment monitoring. Accurate delineation of kidney boundaries and tumor extent is critical for determining resectability and estimating tumor volume.
+
+Manual slice-by-slice segmentation remains the clinical standard but is labor-intensive, time-consuming, and subject to substantial inter-observer variability. Different radiologists may draw different boundaries for the same tumor, affecting surgical planning and longitudinal follow-up consistency. These limitations motivate automated decision-support tools that provide consistent segmentation while preserving physician oversight.
+
+Deep learning approaches, particularly 3D convolutional neural networks, have shown promise in medical image segmentation. However, clinical translation requires careful attention to preprocessing, inference strategies, post-processing, and safety documentation.
+
+This work presents NephroVision, an academic decision-support prototype for automated kidney and renal tumor/cyst segmentation from abdominal CT. The system is trained on the KiTS23 dataset and employs a 3D U-Net with HU preprocessing, sliding-window inference, test-time augmentation, and conservative post-processing. Segmentation masks, volumetric statistics, and interactive 3D visualization are produced for physician review.
+
+Following mid-year feedback, the team documented the full development process: preprocessing decisions, training configurations, engineering choices, challenges, and failure analysis. The system is classified as IEC 62304 Software Safety Class B and is not clinically approved. All outputs require physician review.

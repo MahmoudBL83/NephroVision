@@ -1,0 +1,57 @@
+% NephroVision IEEE Final Report
+% Automated Kidney and Renal Tumor Segmentation System
+% Medical Engineering Department, Graduation Project
+% Compile with: pdflatex main.tex -> bibtex main -> pdflatex main.tex -> pdflatex main.tex
+
+\documentclass[conference]{IEEEtran}
+
+% === Packages ===
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+
+% === Document ===
+\begin{document}
+
+\title{NephroVision: Automated Kidney and Renal Tumor Segmentation System}
+
+\author{
+\IEEEauthorblockN{Rashed Mamdouh, Mohamed Walid, Mahmoud BahaaAldeen, Mahmoud Mohammed, Youssef Mohammed}
+\IEEEauthorblockA{Medical Engineering Department\\
+Graduation Project\\
+Supervisor: Hisham Abdeltawab, Ph.D.}
+}
+
+\maketitle
+
+\input{sections/01_abstract.tex}
+
+\input{sections/02_introduction.tex}
+\input{sections/03_clinical_background.tex}
+\input{sections/04_related_work.tex}
+\input{sections/05_dataset_exploration.tex}
+\input{sections/06_development_process.tex}
+\input{sections/07_methodology.tex}
+\input{sections/08_training_and_inference.tex}
+\input{sections/09_software_system_design.tex}
+\input{sections/10_evaluation_results.tex}
+\input{sections/11_challenges_failure_analysis.tex}
+\input{sections/12_safety_regulatory.tex}
+\input{sections/13_discussion.tex}
+\input{sections/14_limitations.tex}
+\input{sections/15_future_work.tex}
+\input{sections/16_conclusion.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .box-title { font-size: 13px; font-weight: 600; fill: #1a1a1a; text-anchor: middle; }
+      .box-desc { font-size: 10px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .box-value { font-family: 'SF Mono', monospace; font-size: 18px; font-weight: 700; fill: #1e3a5f; text-anchor: middle; }
+      .arrow { fill: none; stroke: #d0d0d0; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d0d0d0"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">Inference Workflow</text>
+  <text x="480" y="82" class="subtitle">Sliding window + test-time augmentation</text>
+
+  <!-- Boxes -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="200" width="150" height="120" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="250" y="180" width="150" height="160" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="440" y="180" width="150" height="160" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="630" y="180" width="150" height="160" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="820" y="200" width="120" height="120" rx="12" fill="#f0f7f4" stroke="#2d6a4f" stroke-width="1.5"/>
+  </g>
+
+  <!-- Content -->
+  <text x="135" y="245" class="box-title">CT Volume</text>
+  <text x="135" y="268" class="box-desc">Full scan input</text>
+
+  <text x="325" y="230" class="box-value">64×192×192</text>
+  <text x="325" y="258" class="box-title">Sliding Window</text>
+  <text x="325" y="280" class="box-desc">Patches across volume</text>
+  <text x="325" y="300" class="box-desc">GPU memory efficient</text>
+
+  <text x="515" y="230" class="box-value">50%</text>
+  <text x="515" y="258" class="box-title">Overlap</text>
+  <text x="515" y="280" class="box-desc">All 3 dimensions</text>
+  <text x="515" y="300" class="box-desc">Every voxel ≥2 predictions</text>
+
+  <text x="705" y="230" class="box-value">8 flips</text>
+  <text x="705" y="258" class="box-title">TTA</text>
+  <text x="705" y="280" class="box-desc">x, y, z combinations</text>
+  <text x="705" y="300" class="box-desc">Average predictions</text>
+
+  <text x="880" y="245" class="box-title" style="fill: #2d6a4f;">Merge</text>
+  <text x="880" y="268" class="box-title" style="fill: #2d6a4f;">Prediction</text>
+  <text x="880" y="291" class="box-desc" style="fill: #2d6a4f;">3-class output</text>
+
+  <!-- Arrows -->
+  <line x1="210" y1="260" x2="240" y2="260" class="arrow"/>
+  <line x1="400" y1="260" x2="430" y2="260" class="arrow"/>
+  <line x1="590" y1="260" x2="620" y2="260" class="arrow"/>
+  <line x1="780" y1="260" x2="810" y2="260" class="arrow"/>
+
+  <!-- Footer -->
+  <text x="480" y="390" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Every voxel near boundary predicted from ≥2 patches · Averaging eliminates stitching artifacts</text>
+</svg>

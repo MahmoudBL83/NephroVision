@@ -1,0 +1,20 @@
+% Table: Risk and Mitigation
+% Used in: 12_safety_regulatory.tex
+% TODO: Expand with additional risks if identified by the team.
+
+\begin{table}[!t]
+\caption{Known Risks and Mitigation Strategies}
+\label{tab:risk_mitigation}
+\centering
+\begin{tabular}{@{}p{3.5cm}p{3cm}p{3.5cm}p{3cm}@{}}
+\toprule
+\textbf{Risk} & \textbf{Severity} & \textbf{Mitigation} & \textbf{Residual Risk} \\
+\midrule
+Over-reliance on automated output without physician review & High & Explicit disclaimers; decision-support framing; physician review required & Medium (depends on user compliance) \\
+False negative tumor (missed lesion) & High & Conservative post-processing (100-voxel threshold); 100\% detection on test set; physician oversight & Low--Medium (not guaranteed on out-of-distribution data) \\
+False positive tumor (unnecessary intervention) & Medium & Blob removal; HD95 reporting; physician review & Low \\
+Domain shift on non-KiTS23 data & High & Explicit scoping; external validation as future work & High (until validated) \\
+Boundary leakage affecting volume estimation & Medium & TTA; overlap fusion; HD95 transparency & Medium \\
+\bottomrule
+\end{tabular}
+\end{table}

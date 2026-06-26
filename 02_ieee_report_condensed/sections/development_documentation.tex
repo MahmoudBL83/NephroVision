@@ -1,0 +1,37 @@
+\section{Development Documentation Summary}
+
+Following mid-year evaluation feedback requesting thorough documentation of the development process, the team implemented comprehensive documentation practices covering the entire engineering workflow.
+
+\subsection{Documentation Artifacts}
+
+The project maintains the following documentation:
+
+\begin{itemize}
+    \item \textbf{Development timeline:} Chronological record of all project phases and milestones.
+    \item \textbf{Experiment log:} Detailed record of all training and inference experiments with hyperparameters, results, and decisions.
+    \item \textbf{Model training documentation:} Hardware, software, data splits, hyperparameters, and training procedures.
+    \item \textbf{Preprocessing decisions:} Rationale for HU clipping range, normalization method, and validation procedures.
+    \item \textbf{Challenges and solutions:} Engineering difficulties encountered and mitigations applied.
+    \item \textbf{Cyst/tumor detection challenges:} Technical explanation of why tumor/cyst segmentation is more difficult than kidney segmentation.
+    \item \textbf{Failure cases analysis:} Analysis of segmentation failures with root cause hypotheses and corrective actions.
+    \item \textbf{Reproducibility notes:} Environment specifications, random seeds, commands, and checkpoint information.
+\end{itemize}
+
+\subsection{Key Development Phases}
+
+The development workflow comprised ten phases: (1) problem understanding and clinical motivation, (2) dataset exploration, (3) preprocessing pipeline design, (4) baseline 3D U-Net implementation, (5) training and validation iterations, (6) inference pipeline development, (7) post-processing improvements, (8) web application and 3D visualization, (9) safety documentation, and (10) final validation and defense preparation.
+
+Each phase involved iterative experimentation with decisions documented in the experiment log. Training experiments explored various loss functions, optimizers, learning rate schedules, and augmentation strategies. Checkpoint selection was based on validation performance, with the best-performing model retained for final evaluation.
+
+\subsection{Engineering Decisions}
+
+Key engineering decisions included:
+\begin{itemize}
+    \item \textbf{3D over 2D:} Volumetric processing captures inter-slice context essential for kidney morphology.
+    \item \textbf{HU clipping $[-200, 300]$:} Empirically determined to balance tissue contrast and noise suppression.
+    \item \textbf{Sliding-window inference:} Enables processing full volumes within GPU memory constraints.
+    \item \textbf{8-flip TTA:} Reduces boundary noise at acceptable computational cost.
+    \item \textbf{Conservative post-processing:} Prioritizes detection sensitivity over precision for decision-support use.
+\end{itemize}
+
+This documentation framework ensures the development process is transparent, reproducible, and defensible. The experiment log and supporting documents are available for review by the defense committee.

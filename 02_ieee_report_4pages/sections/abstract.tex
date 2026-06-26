@@ -1,0 +1,7 @@
+\begin{abstract}
+Manual kidney and tumor delineation in contrast-enhanced CT is labor-intensive and variable. We present NephroVision, an academic decision-support prototype for automated kidney and renal tumor/cyst segmentation. The system preprocesses NIfTI CT volumes (HU clipping $[-200, 300]$, min--max normalization), segments with a 3D U-Net using sliding-window inference ($64 \times 192 \times 192$ patches, $50\%$ overlap) and 8-flip test-time augmentation, and produces segmentation masks, volumetric statistics, and browser-based 3D visualization. Evaluated on 64 independent held-out KiTS23 cases, NephroVision achieved kidney Dice of $0.9307 \pm 0.064$, tumor Dice of $0.6558 \pm 0.262$, mean Dice of $0.7933$, and tumor detection rate of $100\%$ ($64/64$). Kidney segmentation is robust; tumor detection is reliable; tumor boundary precision is moderate. The system is an IEC 62304 Class B academic prototype requiring physician review and is not clinically approved.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Kidney segmentation, 3D U-Net, computed tomography, KiTS23, decision-support.
+\end{IEEEkeywords}

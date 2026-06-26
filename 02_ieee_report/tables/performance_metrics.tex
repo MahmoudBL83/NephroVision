@@ -1,0 +1,20 @@
+% Table: Performance Metrics
+% Used in: 10_evaluation_results.tex
+% All values are fixed per KNOWN_METRICS.md and must not be altered.
+
+\begin{table}[!t]
+\caption{Final Test Set Performance (64 Independent Held-Out KiTS23 Cases)}
+\label{tab:performance_metrics}
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Metric} & \textbf{Kidney} & \textbf{Tumor} \\
+\midrule
+Dice Score & $0.9307 \pm 0.064$ & $0.6558 \pm 0.262$ \\
+HD95 (mm) & $19.98$ & $67.35$ \\
+\midrule
+\multicolumn{2}{@{}l}{\textbf{Mean Dice}} & $0.7933$ \\
+\multicolumn{2}{@{}l}{\textbf{Tumor Detection Rate}} & $64/64 = 100\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}

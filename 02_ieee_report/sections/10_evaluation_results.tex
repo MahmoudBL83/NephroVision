@@ -1,0 +1,100 @@
+\section{Evaluation Results}
+
+This section presents the quantitative evaluation of the NephroVision segmentation model on the project-defined held-out test set. All reported results are based on analytical validation using KiTS23 dataset cases and do not constitute clinical validation. No confidence intervals beyond the reported standard deviations are computed, and no statistical significance claims are made.
+
+\subsection{Evaluation Setup}
+
+The final 3D U-Net model is evaluated on 64 independent held-out cases from the KiTS23 dataset. These cases were selected before any model development and were never used during training, validation, or hyperparameter tuning. This setup ensures that the reported metrics reflect generalization to unseen data.
+
+Evaluation is performed on full CT volumes with preprocessing identical to the training pipeline (HU clipping $[-200, 300]$, min--max normalization to $[0, 1]$). Inference uses the full sliding-window pipeline with $64 \times 192 \times 192$ patches, $50\%$ overlap, and 8-flip test-time augmentation. Post-processing thresholds (kidney blobs $< 5000$ voxels removed, tumor blobs $< 100$ voxels removed) are applied before metric computation. All metrics are computed on full-resolution segmentation masks using the KiTS23 reference metric implementation.
+
+\input{tables/dataset_configuration.tex}
+
+Table~\ref{tab:dataset_config} summarizes the dataset properties and system configuration used in this evaluation.
+
+\subsection{Metrics}
+
+Three metrics are used to evaluate segmentation performance:
+
+\begin{itemize}
+    \item \textbf{Dice Similarity Coefficient (DSC):} Measures volumetric overlap between the predicted segmentation $P$ and the ground-truth $G$, defined as:
+    \begin{equation}
+    \text{DSC} = \frac{2 |P \cap G|}{|P| + |G|}
+    \end{equation}
+    Dice ranges from 0 (no overlap) to 1 (perfect overlap). It is sensitive to overall region agreement but less sensitive to boundary accuracy.
+    
+    \item \textbf{95th Percentile Hausdorff Distance (HD95):} Measures the 95th percentile of surface-to-surface distances between predicted and ground-truth boundaries. HD95 captures boundary precision and is reported in millimeters. Lower values indicate better boundary agreement.
+    
+    \item \textbf{Tumor Detection Rate:} The proportion of test cases correctly identified as containing any tumor/cyst voxels. A case is considered detected if at least one tumor-class voxel is present in the predicted segmentation. This metric is computed as the ratio of correctly detected tumor cases to the total number of test cases with ground-truth tumor annotations.
+\end{itemize}
+
+These metrics together provide a comprehensive assessment of region overlap and boundary accuracy. Dice quantifies how well the predicted region covers the true region, HD95 quantifies boundary precision, and detection rate captures the system's ability to identify tumor presence.
+
+\subsection{Performance Metrics}
+
+\input{tables/performance_metrics.tex}
+
+Table~\ref{tab:performance_metrics} presents the final test set performance. The model demonstrates robust kidney segmentation with a Dice score of $0.9307 \pm 0.064$, indicating consistent and accurate kidney delineation across the 64 test cases. Tumor segmentation achieves a Dice score of $0.6558 \pm 0.262$, reflecting moderate but variable performance depending on tumor size, morphology, and boundary characteristics.
+
+The mean Dice across kidney and tumor classes is $0.7933$. The tumor detection rate is $100\%$ ($64/64$), indicating that the model identifies tumor presence in every test case containing a ground-truth tumor. However, detection rate is distinct from segmentation accuracy: a case may be correctly detected (at least one voxel correctly labeled) while the segmentation boundaries exhibit varying degrees of precision.
+
+Boundary precision metrics confirm this pattern: HD95 for kidney is $19.98$ mm, reflecting reasonably precise kidney boundaries. HD95 for tumor is $67.35$ mm, indicating substantial boundary uncertainty consistent with the standard deviation of tumor Dice.
+
+\subsection{Acceptance Criteria}
+
+\input{tables/acceptance_criteria.tex}
+
+Table~\ref{tab:acceptance_criteria} compares the achieved results against the project acceptance criteria established at the beginning of development. All six criteria are met with PASS status:
+
+\begin{itemize}
+    \item Kidney Dice ($0.9307$) exceeds the target of $\geq 0.85$ by a substantial margin, confirming robust kidney segmentation.
+    \item Tumor Dice ($0.6558$) exceeds the target of $\geq 0.50$, achieving moderate but acceptable segmentation performance.
+    \item Mean Dice ($0.7933$) exceeds the target of $\geq 0.65$.
+    \item HD95 Kidney ($19.98$ mm) is below the threshold of $< 30$ mm.
+    \item HD95 Tumor ($67.35$ mm) is below the threshold of $< 100$ mm.
+    \item Tumor Detection rate ($100\%$) exceeds the target of $\geq 90\%$.
+\end{itemize}
+
+All criteria are satisfied, indicating that the system meets its predefined performance targets for an academic decision-support prototype.
+
+\subsection{Results Interpretation}
+
+The evaluation results reveal a clear performance pattern:
+
+\textbf{Kidney segmentation is robust and consistent.} The high Dice ($0.9307 \pm 0.064$) and moderate HD95 ($19.98$ mm) indicate that the model reliably identifies kidney boundaries across diverse cases. The low standard deviation of kidney Dice ($0.064$) suggests consistent performance across the test set, with few outlier cases. This performance is attributable to the relatively consistent morphology of the kidney compared to tumors, the larger spatial extent of kidney tissue, and the clearer contrast boundary between kidney parenchyma and surrounding fat.
+
+\textbf{Tumor segmentation is moderate and variable.} The tumor Dice of $0.6558 \pm 0.262$ with a large standard deviation reflects substantial case-to-case variability. This is expected given the challenges inherent to tumor segmentation:
+
+\begin{itemize}
+    \item \textbf{Small lesion size:} Small tumors occupying only tens to hundreds of voxels are difficult to segment accurately. A displacement of a few voxels in boundary prediction causes a large proportional decrease in Dice score for small structures compared to large ones.
+    \item \textbf{Boundary ambiguity:} Tumor boundaries are often poorly defined on CT, particularly for infiltrative tumors, cystic lesions with thin walls, and masses adjacent to the renal parenchyma with similar enhancement characteristics. This ambiguity affects both automated segmentation and manual annotation consistency.
+    \item \textbf{Heterogeneous appearance:} Tumors exhibit diverse morphological characteristics (solid, cystic, necrotic, calcified) that are not captured by a single learned representation. The merged tumor/cyst class further increases intra-class variability.
+\end{itemize}
+
+\textbf{Detection rate is not segmentation accuracy.} The $100\%$ detection rate indicates that the model correctly identifies tumor presence in every test case containing a tumor. However, this metric is distinct from segmentation accuracy: a case can be correctly detected while having low Dice if the segmentation boundaries are imprecise. Detection rate reflects the model's sensitivity to tumor presence, not its precision in delineating tumor extent.
+
+The results figure (Figure~\ref{fig:results}) illustrates representative segmentation examples.
+
+\begin{figure}[!t]
+\centering
+% TODO: Replace with actual figure: fig_results.pdf
+% \includegraphics[width=0.9\linewidth]{figures/fig_results.pdf}
+\fbox{\parbox{0.7\linewidth}{\centering\vspace{2cm}\textbf{[Placeholder]}\\Results Summary Figure\\\small Dice comparison | Detection rate | Example overlays\vspace{2cm}}}
+\caption{Evaluation results summary. (Left) Kidney vs. tumor Dice comparison. (Center) Tumor detection rate. (Right) Representative segmentation overlays showing ground truth (green) and prediction (red) on axial CT slices.}
+\label{fig:results}
+\end{figure}
+
+\subsection{Analytical Validation Scope}
+
+All results reported in this section are based on analytical validation using the project-defined 64-case held-out evaluation subset from the KiTS23 dataset. This validation is internal to the dataset and does not constitute clinical validation. Specifically:
+
+\begin{itemize}
+    \item No prospective clinical trial was conducted.
+    \item No independent external dataset was used for validation.
+    \item No comparison against human expert performance was performed.
+    \item No assessment of clinical impact or utility was conducted.
+\end{itemize}
+
+These results demonstrate the technical performance of the segmentation model under controlled conditions. Clinical validation---including multi-center data, diverse scanner protocols, and assessment of clinical workflow impact---is identified as future work. The system is not clinically approved and is intended for decision-support use only.
+
+Results with per-case Dice distributions and tumor size correlation analysis are documented in the experiment log (\texttt{experiment\_log.md}) and failure cases analysis (\texttt{failure\_cases\_analysis.md}).

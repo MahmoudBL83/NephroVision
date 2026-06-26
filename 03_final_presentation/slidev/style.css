@@ -1,0 +1,609 @@
+/* ============================================================
+   NephroVision Defense — Academic Gravitas Theme
+   Inspired by Cambridge, MIT, Stanford defense presentations
+   White space · Restrained color · Thin borders · Large type
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --bg-warm: #fafafa;
+  --bg-tint: #f5f5f5;
+
+  --text: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #8a8a8a;
+  --text-light: #b0b0b0;
+
+  --accent: #1e3a5f;
+  --accent-light: #3d5a80;
+  --accent-bg: #f0f4f8;
+
+  --green: #2d6a4f;
+  --green-bg: #f6faf8;
+  --green-border: #d4e8de;
+
+  --orange: #bc4b31;
+  --orange-bg: #fdf8f6;
+  --orange-border: #f0ddd6;
+
+  --red: #9b2c2c;
+  --red-bg: #fdf7f7;
+  --red-border: #f0d5d5;
+
+  --border: #e0e0e0;
+  --border-light: #eeeeee;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Crimson Text', Georgia, serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, monospace;
+}
+
+/* === Global Slide === */
+.slidev-layout {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  padding: 3.5rem 4rem;
+  line-height: 1.5;
+}
+
+/* Thin top rule */
+.slidev-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* === Typography === */
+h1 {
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 0.4rem !important;
+}
+
+h2 {
+  font-size: 1.15rem !important;
+  font-weight: 400 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 0.01em;
+  margin-bottom: 1.2rem !important;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+h3 {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+p, li {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* === Lists === */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul li {
+  position: relative;
+  padding-left: 1.2rem;
+  margin-bottom: 0.45rem;
+}
+
+ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 5px;
+  height: 1px;
+  background: var(--accent);
+}
+
+ol {
+  padding-left: 1.1rem;
+}
+
+ol li {
+  margin-bottom: 0.45rem;
+}
+
+ol li::marker {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* === Tables === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 0.6rem 0;
+}
+
+th {
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+  border-bottom: 1.5px solid var(--text);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+td {
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+tr:last-child td {
+  border-bottom: 1px solid var(--border);
+}
+
+tr:nth-child(even) td {
+  background: var(--bg-warm);
+}
+
+/* === Blockquotes === */
+blockquote {
+  border-left: 1.5px solid var(--accent);
+  background: var(--accent-bg);
+  padding: 0.8rem 1.2rem;
+  color: var(--text);
+  font-style: normal;
+  font-size: 0.9rem;
+  margin: 0.8rem 0;
+}
+
+/* === Code === */
+code {
+  font-family: var(--font-mono);
+  background: var(--bg-tint);
+  color: var(--accent);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-size: 0.82em;
+  font-weight: 500;
+}
+
+/* === Slide Number === */
+.slidev-page-number {
+  color: var(--text-light);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* === Slide Footer === */
+.slidev-layout::after {
+  content: 'NephroVision · Medical Engineering Graduation Project';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rem;
+  font-size: 0.55rem;
+  color: var(--text-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg);
+}
+
+/* Hide footer on title slide */
+.slidev-layout.text-center::after {
+  content: none;
+}
+
+/* === Layout Helpers === */
+.nv-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.nv-three-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.nv-four-col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.nv-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* === Section Break Layout === */
+.nv-section-break {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.nv-section-break .section-number {
+  font-family: var(--font-serif);
+  font-size: 6rem;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.nv-section-break .section-title {
+  font-size: 2.4rem !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem !important;
+}
+
+.nv-section-break .section-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* === Accent Text === */
+.nv-accent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* === Section Numbering === */
+.nv-section-num {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+/* === Cards === */
+.nv-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  transition: border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.nv-card:hover {
+  border-color: var(--border-light);
+}
+
+.nv-card-green {
+  border-color: var(--green-border);
+  background: var(--green-bg);
+}
+
+.nv-card-orange {
+  border-color: var(--orange-border);
+  background: var(--orange-bg);
+}
+
+.nv-card-red {
+  border-color: var(--red-border);
+  background: var(--red-bg);
+}
+
+.nv-card-cyan {
+  border-color: #d0dce8;
+  background: var(--accent-bg);
+}
+
+/* === Divider === */
+.nv-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.6rem 0;
+}
+
+/* === Placeholder === */
+.nv-placeholder {
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  background: var(--bg-warm);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  min-height: 70px;
+  transition: border-color 0.2s ease;
+}
+
+.nv-placeholder:hover {
+  border-color: var(--text-light);
+}
+
+.nv-placeholder-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.nv-placeholder-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.nv-placeholder-hint {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* === SVG Image Wrapper === */
+.nv-svg-wrapper {
+  background: var(--bg-warm);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.nv-svg-wrapper:hover {
+  border-color: var(--border-light);
+}
+
+.nv-svg-wrapper img {
+  width: 100%;
+  display: block;
+  border-radius: 4px;
+}
+.slidev-vclick-target {
+  transition: all 0.35s ease;
+}
+
+.slidev-vclick-target.v-hidden {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* === Slide Navigator / Controls === */
+
+/* Navigation arrows container */
+.slidev-nav-controls {
+  position: fixed;
+  bottom: 40px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 50;
+}
+
+/* Individual nav buttons */
+.slidev-nav-controls button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.slidev-nav-controls button:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(30, 58, 95, 0.25);
+}
+
+.slidev-nav-controls button:active {
+  transform: translateY(0);
+}
+
+/* Slide counter / page number */
+.slidev-page-number {
+  position: fixed;
+  bottom: 40px;
+  left: 24px;
+  color: var(--text-light);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  z-index: 50;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+/* Progress bar */
+.slidev-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-light);
+  z-index: 50;
+}
+
+.slidev-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+/* Overview / slide grid navigation */
+.slidev-overview {
+  background: var(--bg-warm);
+  padding: 2rem;
+}
+
+.slidev-overview .slidev-overview-item {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  background: var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.slidev-overview .slidev-overview-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.slidev-overview .slidev-overview-item.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+}
+
+/* Slide thumbnail in overview */
+.slidev-overview .slidev-overview-item img {
+  width: 100%;
+  display: block;
+}
+
+/* Overview page title */
+.slidev-overview h1 {
+  font-size: 1.5rem !important;
+  color: var(--text) !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+}
+
+/* Grid layout for overview */
+.slidev-overview .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Presenter mode navigator */
+.slidev-presenter-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 100;
+  padding: 0 24px;
+}
+
+.slidev-presenter-nav button {
+  padding: 6px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slidev-presenter-nav button:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+/* Slide timer in presenter mode */
+.slidev-timer {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-warm);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+/* === Minimal Autocomplete Hide === */
+.autocomplete-list,
+.autocomplete-suggestions,
+.suggestion-list,
+[role="listbox"][aria-autocomplete="list"] {
+  display: none !important;
+}
+
+/* === Responsive === */
+@media (max-width: 800px) {
+  .nv-two-col, .nv-three-col, .nv-four-col {
+    grid-template-columns: 1fr;
+  }
+  
+  .slidev-nav-controls {
+    bottom: 20px;
+    right: 16px;
+  }
+  
+  .slidev-page-number {
+    bottom: 20px;
+    left: 16px;
+  }
+}

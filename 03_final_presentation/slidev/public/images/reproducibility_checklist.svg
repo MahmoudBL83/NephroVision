@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .check { font-size: 18px; font-weight: 700; fill: #2d6a4f; text-anchor: middle; }
+      .item { font-size: 12px; font-weight: 600; fill: #1a1a1a; text-anchor: middle; }
+      .desc { font-size: 10px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">Reproducibility Checklist</text>
+  <text x="480" y="82" class="subtitle">Another engineer should be able to replicate our results</text>
+
+  <!-- 3x3 Grid -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="110" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="360" y="110" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="640" y="110" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+
+    <rect x="80" y="230" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="360" y="230" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="640" y="230" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+
+    <rect x="80" y="350" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="360" y="350" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="640" y="350" width="260" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+  </g>
+
+  <!-- Row 1 -->
+  <text x="210" y="150" class="check">✓</text>
+  <text x="210" y="175" class="item">Code Repository</text>
+  <text x="210" y="195" class="desc">Git version control</text>
+
+  <text x="490" y="150" class="check">✓</text>
+  <text x="490" y="175" class="item">Experiment Log</text>
+  <text x="490" y="195" class="desc">Every run documented</text>
+
+  <text x="770" y="150" class="check">✓</text>
+  <text x="770" y="175" class="item">Trained Weights</text>
+  <text x="770" y="195" class="desc">Checkpoint files saved</text>
+
+  <!-- Row 2 -->
+  <text x="210" y="270" class="check">✓</text>
+  <text x="210" y="295" class="item">Config Files</text>
+  <text x="210" y="315" class="desc">Hyperparameters recorded</text>
+
+  <text x="490" y="270" class="check">✓</text>
+  <text x="490" y="295" class="item">Environment File</text>
+  <text x="490" y="315" class="desc">Dependencies listed</text>
+
+  <text x="770" y="270" class="check">✓</text>
+  <text x="770" y="295" class="item">Dataset Documentation</text>
+  <text x="770" y="315" class="desc">KiTS23 split details</text>
+
+  <!-- Row 3 -->
+  <text x="210" y="390" class="check">✓</text>
+  <text x="210" y="415" class="item">Preprocessing Spec</text>
+  <text x="210" y="435" class="desc">HU range + normalization</text>
+
+  <text x="490" y="390" class="check">✓</text>
+  <text x="490" y="415" class="item">Inference Pipeline</text>
+  <text x="490" y="435" class="desc">Sliding window + TTA</text>
+
+  <text x="770" y="390" class="check">✓</text>
+  <text x="770" y="415" class="item">Failure Analysis</text>
+  <text x="770" y="435" class="desc">Documented limitations</text>
+
+  <!-- Footer -->
+  <text x="480" y="490" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Reproducibility is a core scientific requirement · Full documentation in 07_development_documentation/</text>
+</svg>

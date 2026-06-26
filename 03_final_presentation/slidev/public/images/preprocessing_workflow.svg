@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .box-title { font-size: 15px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .box-desc { font-size: 11px; font-weight: 400; fill: #4a4a4a; text-anchor: middle; }
+      .box-value { font-family: 'SF Mono', monospace; font-size: 20px; font-weight: 700; fill: #1e3a5f; text-anchor: middle; }
+      .arrow { fill: none; stroke: #d0d0d0; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d0d0d0"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">Preprocessing Workflow</text>
+  <text x="480" y="82" class="subtitle">Empirical choices with documented rationale</text>
+
+  <!-- Boxes -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="200" width="170" height="140" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="310" y="200" width="170" height="140" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="540" y="200" width="170" height="140" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="770" y="200" width="170" height="140" rx="12" fill="#f0f4f8" stroke="#1e3a5f" stroke-width="1.5"/>
+  </g>
+
+  <!-- Icons / Values -->
+  <text x="165" y="250" class="box-value">Load</text>
+  <text x="165" y="275" class="box-title">NIfTI</text>
+  <text x="165" y="298" class="box-desc">.nii / .nii.gz</text>
+
+  <text x="395" y="240" class="box-value">[-200, 300]</text>
+  <text x="395" y="270" class="box-title">HU Clipping</text>
+  <text x="395" y="295" class="box-desc">Soft tissue focus</text>
+
+  <text x="625" y="240" class="box-value">[0, 1]</text>
+  <text x="625" y="270" class="box-title">Normalize</text>
+  <text x="625" y="295" class="box-desc">Min-max scaling</text>
+
+  <text x="855" y="250" class="box-value" style="fill: #1e3a5f;">64×192×192</text>
+  <text x="855" y="275" class="box-title" style="fill: #1e3a5f;">Patch Prep</text>
+  <text x="855" y="298" class="box-desc">Window ready</text>
+
+  <!-- Arrows -->
+  <line x1="250" y1="270" x2="290" y2="270" class="arrow"/>
+  <line x1="480" y1="270" x2="520" y2="270" class="arrow"/>
+  <line x1="710" y1="270" x2="750" y2="270" class="arrow"/>
+
+  <!-- Footer -->
+  <text x="480" y="400" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Identical preprocessing for training and inference prevents distribution mismatch</text>
+</svg>

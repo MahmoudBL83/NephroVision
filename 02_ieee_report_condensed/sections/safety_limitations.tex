@@ -1,0 +1,36 @@
+\section{Safety, Limitations, and Future Work}
+
+\subsection{Safety and Regulatory Positioning}
+
+NephroVision is classified as Software as a Medical Device (SaMD) under the International Medical Device Regulators Forum framework and positioned as IEC 62304 Software Safety Class B \cite{iec62304}. This classification is appropriate because the system produces segmentation masks and volumetric statistics intended to support physician review, not replace physician judgment. All outputs require physician oversight before clinical application. The system does not make autonomous decisions; it performs anatomical delineation, not diagnosis. The most probable harm from incorrect segmentation is non-serious when detected during physician review.
+
+The system is an academic prototype and has not undergone regulatory review, approval, or certification. No submission has been made to the FDA, notified body, or any regulatory authority. No prospective clinical trial has been conducted.
+
+\subsection{Known Limitations}
+
+\begin{itemize}
+    \item \textbf{Analytical validation only:} All evaluation is on KiTS23 dataset. No prospective clinical trial or external hospital validation.
+    \item \textbf{Possible domain shift:} Performance on CT from different scanners, protocols, or populations is unknown.
+    \item \textbf{Moderate tumor boundary precision:} Tumor Dice $0.6558 \pm 0.262$ and HD95 $67.35$ mm indicate boundary accuracy is moderate and variable.
+    \item \textbf{Cyst/tumor class merging:} System cannot distinguish benign cysts from malignant tumors.
+    \item \textbf{Academic prototype status:} Not deployed in clinical settings. Cybersecurity hardening and usability testing are future work.
+    \item \textbf{No uncertainty estimation:} System does not provide confidence scores or uncertainty maps.
+\end{itemize}
+
+\subsection{Risk Mitigations}
+
+Implemented mitigations include explicit disclaimers in the web interface, interactive 3D visualization for physician review, documented limitations, conservative post-processing thresholds, and human-in-the-loop workflow design. All outputs require physician verification before clinical use.
+
+\subsection{Future Work}
+
+High-priority future directions include:
+\begin{itemize}
+    \item \textbf{Improve tumor boundary accuracy:} Evaluate boundary-aware loss functions (boundary loss, Hausdorff loss).
+    \item \textbf{External multi-center validation:} Assess domain shift and generalizability on diverse clinical data.
+    \item \textbf{Evaluate nnU-Net:} Compare against self-configuring framework to identify improvement headroom.
+    \item \textbf{Prospective clinical evaluation:} Assess impact on radiologist interpretation time and measurement consistency.
+\end{itemize}
+
+Medium-priority work includes expanding failure case analysis, improving data augmentation for domain generalization, adding uncertainty estimation, and improving cybersecurity documentation. Lower-priority work includes formal usability testing and regulatory documentation preparation.
+
+These improvements are within the scope of future work and do not detract from the project's value as an academic prototype demonstrating integration of medical imaging, deep learning, software design, safety awareness, and documentation discipline.

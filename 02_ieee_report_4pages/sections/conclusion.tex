@@ -1,0 +1,7 @@
+﻿\section{Conclusion}
+
+NephroVision is an end-to-end biomedical AI prototype integrating CT preprocessing, 3D U-Net segmentation, sliding-window inference with test-time augmentation, post-processing, volumetric statistics, and browser-based 3D visualization. Comprehensive development documentation records preprocessing decisions, training configurations, engineering choices, and failure analysis.
+
+On 64 independent held-out KiTS23 cases, NephroVision achieved kidney Dice $0.9307 \pm 0.064$, tumor Dice $0.6558 \pm 0.262$, mean Dice $0.7933$, and tumor detection $100\%$ ($64/64$). Kidney segmentation is robust; tumor detection is reliable; tumor boundary accuracy is moderate.
+
+Honest reporting of moderate tumor boundary precision strengthens the project's credibility. The decision-support framing ensures appropriate positioning as an academic prototype. Future work should prioritize tumor boundary accuracy, external validation, and prospective clinical evaluation. NephroVision is not clinically approved; all outputs require physician review.

@@ -1,0 +1,9 @@
+\section{Conclusion}
+
+NephroVision is an end-to-end biomedical AI prototype for automated kidney and renal tumor/cyst segmentation from contrast-enhanced abdominal CT. The system integrates CT preprocessing (HU clipping $[-200, 300]$, min--max normalization), 3D U-Net segmentation, sliding-window inference ($64 \times 192 \times 192$ patches, $50\%$ overlap), 8-flip test-time augmentation, conservative post-processing, volumetric statistics, and interactive browser-based 3D visualization. Comprehensive development documentation records preprocessing decisions, training configurations, engineering choices, challenges, and failure analysis.
+
+Evaluated on 64 independent held-out KiTS23 cases, NephroVision achieved kidney Dice of $0.9307 \pm 0.064$, tumor Dice of $0.6558 \pm 0.262$, mean Dice of $0.7933$, and tumor detection rate of $100\%$ ($64/64$). Kidney segmentation is robust. Tumor detection is reliable. Tumor boundary accuracy remains moderate, reflecting the inherent difficulty of segmenting small, heterogeneous lesions on single-phase CT.
+
+The project demonstrates that an academic team can build a functional medical image segmentation system with documented engineering practices. Honest reporting of moderate tumor boundary precision strengthens credibility.
+
+Future work should prioritize improving tumor boundary accuracy, external multi-center validation, and prospective clinical evaluation. NephroVision is not clinically approved; all outputs require physician review.

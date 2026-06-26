@@ -1,0 +1,64 @@
+\section{Related Work}
+
+This section reviews the foundational and applied literature relevant to NephroVision. The discussion covers encoder-decoder segmentation architectures, volumetric extensions, self-configuring frameworks, benchmark datasets, evaluation metrics, and decision-support systems in medical imaging.
+
+\subsection{U-Net and Encoder-Decoder Segmentation Networks}
+
+The U-Net architecture \cite{unet} established the encoder-decoder paradigm as the dominant approach for biomedical image segmentation. The network consists of a contracting path that extracts hierarchical features and an expansive path that recovers spatial resolution through skip connections. This design enables end-to-end training with limited annotated data, a property critical for medical imaging where expert annotations are scarce and expensive.
+
+Subsequent work extended the U-Net family with architectural variations including deeper encoders, attention mechanisms, residual connections, and multi-scale feature aggregation \cite{unet_variants}. Despite these extensions, the core encoder-decoder structure with skip connections remains the standard for medical segmentation tasks, providing a balance between representational capacity and computational efficiency.
+
+\subsection{3D U-Net for Volumetric Biomedical Segmentation}
+
+The 3D U-Net \cite{unet3d} extends the original architecture to volumetric data by replacing 2D convolutions with 3D kernels, enabling direct processing of CT and MRI volumes without slice-by-slice decomposition. This approach preserves spatial context across slices, which is particularly important for anatomical structures with complex three-dimensional morphology such as the kidney and renal tumors.
+
+Volumetric segmentation introduces practical challenges including GPU memory constraints, class imbalance, and boundary ambiguity. Common strategies include patch-based training with sliding-window inference, data augmentation to address limited sample sizes, and post-processing to refine segmentation boundaries \cite{volumetric_segmentation_review}. NephroVision adopts a 3D U-Net architecture with these strategies, addressing memory limitations through $64 \times 192 \times 192$ voxel patches with $50\%$ overlap during inference.
+
+\subsection{nnU-Net: Self-Configuring Medical Segmentation}
+
+The nnU-Net framework \cite{nnunet} represents a significant advance in medical segmentation by automating architecture selection, preprocessing, training, and inference based on dataset properties. The framework analyzes input data characteristics (image size, spacing, intensity distribution) and configures a U-Net pipeline without manual hyperparameter tuning. nnU-Net has achieved state-of-the-art results across multiple medical segmentation benchmarks, demonstrating that careful pipeline configuration often outperforms architectural novelty \cite{nnunet_benchmarks}.
+
+While NephroVision uses a manually configured 3D U-Net rather than nnU-Net, the project adopts several principles emphasized by the nnU-Net authors: standardized preprocessing, consistent data augmentation, and rigorous cross-validation for checkpoint selection. The development documentation records these configuration choices and their rationale.
+
+\subsection{KiTS Challenge and Dataset}
+
+The Kidney Tumor Segmentation (KiTS) challenge series provides benchmark datasets for evaluating automated kidney and renal tumor segmentation methods \cite{kits23}. The KiTS23 dataset, used in this project, contains expert-annotated contrast-enhanced CT volumes with kidney and tumor/cyst labels. The challenge has driven methodological advances in renal segmentation, with participating teams reporting Dice scores ranging from TODO [cite KiTS23 leaderboard] for kidney segmentation and TODO [cite] for tumor segmentation.
+
+The KiTS datasets follow a convention of merging tumor and cyst into a single foreground class, reflecting the clinical difficulty of distinguishing these pathologies on CT without additional imaging modalities. NephroVision adopts this convention, and the merged-class limitation is explicitly documented in the failure analysis (Section~X).
+
+\subsection{Segmentation Metrics: Dice and HD95}
+
+Evaluation of segmentation quality requires metrics that capture both region overlap and boundary accuracy. The Dice similarity coefficient \cite{dice} measures volumetric overlap between predicted and ground-truth segmentations:
+
+\begin{equation}
+\text{Dice} = \frac{2 |P \cap G|}{|P| + |G|}
+\end{equation}
+
+where $P$ is the predicted segmentation and $G$ is the ground truth. Dice ranges from 0 (no overlap) to 1 (perfect overlap) and is the standard metric for medical segmentation benchmarks.
+
+The 95th percentile Hausdorff distance (HD95) \cite{hausdorff} measures boundary accuracy by computing the 95th percentile of surface-to-surface distances between predicted and ground-truth boundaries. Unlike Dice, which is sensitive to volume but insensitive to boundary errors, HD95 captures boundary precision and is particularly important for clinical applications where tumor extent influences surgical planning.
+
+NephroVision reports both Dice and HD95 to provide a comprehensive evaluation: Dice quantifies region overlap, while HD95 quantifies boundary precision.
+
+\subsection{Computer-Aided Detection and Decision-Support Systems}
+
+Computer-aided detection (CADe) and computer-aided diagnosis (CADx) systems have been developed for various medical imaging tasks including mammography, lung nodule detection, and retinal disease screening \cite{cad_review}. These systems aim to assist radiologists by highlighting regions of interest or providing quantitative measurements, but they do not replace physician judgment.
+
+The distinction between detection/diagnosis and decision-support is critical. Decision-support systems provide information that can assist review and planning, but all clinical decisions remain the responsibility of the qualified physician \cite{decision_support_scope}. This framing aligns with regulatory guidance for medical device software, which classifies systems based on intended use and risk \cite{iec62304, fda_samd}.
+
+NephroVision is positioned as a decision-support tool: it produces segmentation masks and volumetric statistics that can support review, but it does not diagnose cancer, classify tumor subtype, or recommend treatment. All outputs require physician verification.
+
+\subsection{How NephroVision Differs}
+
+NephroVision is a graduation project that integrates multiple technical components into a documented end-to-end pipeline. While individual components (3D U-Net, sliding-window inference, test-time augmentation) are established techniques, the project contributes a complete system with explicit documentation of:
+
+\begin{itemize}
+    \item \textbf{Preprocessing decisions:} HU clipping range, normalization strategy, and their rationale.
+    \item \textbf{Training and inference:} Hyperparameters, data splits, checkpoint selection, and inference configuration.
+    \item \textbf{Post-processing:} Connected-component filtering thresholds and their impact on small lesion preservation.
+    \item \textbf{Web visualization:} Browser-based 3D rendering for physician review.
+    \item \textbf{Safety documentation:} IEC 62304-inspired lifecycle documentation appropriate for an academic prototype.
+    \item \textbf{Failure analysis:} Transparent reporting of moderate tumor boundary precision and its causes.
+\end{itemize}
+
+This documentation emphasis distinguishes NephroVision from research-focused segmentation studies that prioritize metric optimization over system integration and safety framing. The project demonstrates that biomedical engineering contributions require not only technical performance but also reproducible development processes, explicit limitations, and safety-conscious design.

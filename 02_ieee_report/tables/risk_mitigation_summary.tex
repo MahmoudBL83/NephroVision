@@ -1,0 +1,22 @@
+% Table: Risk Mitigation Summary
+% Used in: 12_safety_regulatory.tex
+% All risks and mitigations are consistent with DO_NOT_OVERCLAIM.md and failure analysis.
+
+\begin{table}[!t]
+\caption{Risk Identification and Mitigation Summary}
+\label{tab:risk_mitigation}
+\centering
+\begin{tabular}{@{}p{2.6cm}p{2.2cm}p{4.2cm}@{}}
+\toprule
+\textbf{Risk} & \textbf{Severity} & \textbf{Mitigation} \\
+\midrule
+Tumor under-segmentation & High & Physician review; conservative post-processing ($<$100 voxels); 100\% detection on test set \\
+Boundary ambiguity & Medium & Physician review; TTA (8 flips); overlap fusion; visual verification \\
+False positive blobs & Medium & Physician review; post-processing; visual verification \\
+Domain shift & High & Clear disclaimer; academic prototype framing; future external validation \\
+Unsupported clinical interpretation & High & Clear disclaimer; physician review; academic prototype framing \\
+Uploaded data privacy & Medium & Clear disclaimer; local processing where possible; academic prototype framing \\
+Missing regulatory approval & High & Clear disclaimer; no FDA/regulatory claims; academic prototype only \\
+\bottomrule
+\end{tabular}
+\end{table}

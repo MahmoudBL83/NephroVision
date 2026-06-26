@@ -1,0 +1,99 @@
+\section{Dataset Exploration}
+
+This section describes the KiTS23 dataset used for training and evaluation, including its characteristics, relevance to the project, data format, evaluation setup, and preprocessing pipeline. The dataset exploration informs all subsequent design decisions in the segmentation pipeline.
+
+\subsection{KiTS23 Dataset Overview}
+
+The Kidney Tumor Segmentation Challenge 2023 (KiTS23) \cite{kits23} is a public benchmark for automatic semantic segmentation of kidneys, renal tumors, and renal cysts from contrast-enhanced computed tomography (CT) volumes. KiTS23 is the third iteration of the KiTS challenge series, following KiTS19 and KiTS21, and represents an expanded and more heterogeneous dataset for evaluating renal segmentation methods.
+
+The official KiTS23 challenge provides an expanded training set of 489 cases and a fresh official test set of 110 cases \cite{kits23repo}. The dataset includes more heterogeneous CT data compared to previous iterations, including nephrogenic contrast phase cases that present additional segmentation challenges. The official repository provides dataset download tools, reference implementations of evaluation metrics, and baseline methods for comparison \cite{kits23repo}.
+
+KiTS23 has become a standard benchmark for kidney and renal tumor segmentation research, enabling methodological comparison across different deep learning architectures, preprocessing strategies, and training protocols.
+
+\subsection{Dataset Relevance to NephroVision}
+
+KiTS23 is suitable for NephroVision because it provides:
+
+\begin{itemize}
+    \item \textbf{CT volumes with expert annotations:} Each case includes a contrast-enhanced CT volume and an expert-annotated segmentation mask, enabling supervised training of deep learning models.
+    \item \textbf{Kidney, tumor, and cyst labels:} The dataset provides voxel-level annotations for kidney parenchyma and renal masses (tumors and cysts), supporting the project goal of 3D semantic segmentation.
+    \item \textbf{Clinical relevance:} The dataset represents real-world renal pathologies encountered in clinical practice, including renal cell carcinomas, simple cysts, and complex cystic lesions.
+    \item \textbf{Benchmark status:} As a widely-used challenge dataset, KiTS23 enables comparison with published methods and provides a foundation for evaluating segmentation performance.
+\end{itemize}
+
+The dataset supports NephroVision's objective of developing an automated segmentation system that can assist volumetric assessment and support physician review.
+
+\subsection{Data Format and Task Definition}
+
+The input data consists of CT volumes in NIfTI format (\texttt{.nii} or \texttt{.nii.gz}), a standard format for medical imaging data that preserves spatial metadata including voxel dimensions, spacing, and orientation.
+
+NephroVision performs voxel-level semantic segmentation with three output classes:
+
+\begin{itemize}
+    \item \textbf{Background} (label 0): All non-renal tissue including surrounding organs, bone, fat, and air.
+    \item \textbf{Kidney} (label 1): Renal parenchyma including cortex, medulla, and collecting system.
+    \item \textbf{Tumor/Cyst} (label 2): Renal masses including solid tumors, simple cysts, and complex cystic lesions.
+\end{itemize}
+
+The model produces a segmentation mask of identical spatial dimensions to the input volume, where each voxel is assigned one of the three class labels. This task definition aligns with the KiTS23 challenge convention of merging tumor and cyst into a single foreground class, reflecting the clinical difficulty of distinguishing these pathologies on CT without additional imaging modalities or contrast phases. The merged-class limitation is explicitly documented in the failure analysis (Section~X).
+
+\subsection{Official Dataset vs Project Evaluation Split}
+
+The official KiTS23 challenge reports a larger dataset setup with 489 training cases and 110 official test cases \cite{kits23}. However, NephroVision evaluated its final model on a project-defined held-out test subset of 64 independent cases according to the project's evaluation setup.
+
+This 64-case held-out subset was selected before model development and was never used during training or hyperparameter tuning, ensuring unbiased evaluation of the final model. The subset represents a diverse sample of renal pathologies and imaging characteristics from the KiTS23 dataset.
+
+Therefore, all performance values reported in this paper refer to the NephroVision project-defined held-out evaluation subset, not to an official KiTS23 leaderboard submission.
+
+\input{tables/dataset_configuration.tex}
+
+Table~\ref{tab:dataset_config} summarizes the dataset properties and system configuration used in NephroVision.
+
+\subsection{Dataset Preparation}
+
+Dataset preparation involves loading, validating, and organizing CT volumes and their corresponding segmentation labels for 3D model processing:
+
+\begin{enumerate}
+    \item \textbf{NIfTI loading:} CT volumes and segmentation masks are loaded using SimpleITK or NiBabel, preserving spatial metadata (dimensions, spacing, orientation).
+    \item \textbf{Label verification:} Segmentation labels are validated to ensure correct class encoding (0: background, 1: kidney, 2: tumor/cyst) and spatial alignment with the corresponding CT volume.
+    \item \textbf{Volume preparation:} Input volumes and labels are prepared for 3D model processing, including orientation standardization and metadata extraction.
+    \item \textbf{Subset separation:} Training, validation, and test subsets are maintained separately throughout the pipeline. The 64-case test set is held out from the beginning and never accessed during model development.
+\end{enumerate}
+
+The separation between training/validation/test subsets is documented in the experiment log (\texttt{07\_dev\_docs/experiment\_log.md}), ensuring reproducibility and preventing data leakage.
+
+\subsection{Preprocessing Preview}
+
+All CT volumes undergo identical preprocessing before training and inference. The preprocessing pipeline is documented in detail in \texttt{07\_dev\_docs/preprocessing\_decisions.md} and consists of:
+
+\begin{itemize}
+    \item \textbf{HU clipping to $[-200, 300]$:} Hounsfield-unit values are clipped to focus on soft-tissue contrast, suppressing bone, air, and extreme outliers while preserving kidney and tumor enhancement patterns.
+    \item \textbf{Normalization to $[0, 1]$:} Clipped volumes are normalized using min--max scaling:
+    \begin{equation}
+    x_{\text{norm}} = \frac{x - (-200)}{300 - (-200)} = \frac{x + 200}{500}
+    \end{equation}
+    This produces values in $[0, 1]$, improving numerical stability during training and ensuring consistent input distributions across cases.
+    \item \textbf{Patch/window configuration:} During inference, full CT volumes are processed using a sliding-window strategy with $64 \times 192 \times 192$ voxel patches and $50\%$ overlap, as described in Section~VII.
+\end{itemize}
+
+The preprocessing pipeline is deterministic and reproducible. Identical preprocessing is applied during training and inference to ensure consistency.
+
+\subsection{Dataset-Related Challenges}
+
+The KiTS23 dataset presents several challenges that influence segmentation pipeline design:
+
+\begin{itemize}
+    \item \textbf{High memory cost of 3D CT volumes:} Full CT volumes contain hundreds of slices with high in-plane resolution, exceeding GPU memory limits. This motivates patch-based training and sliding-window inference strategies.
+    \item \textbf{Variation in CT contrast phases:} The dataset includes cases acquired with different contrast protocols (arterial, venous, nephrogenic), introducing variability in tissue enhancement patterns and segmentation difficulty.
+    \item \textbf{Tumor and cyst size variability:} Lesions range from small cysts ($< 1$ cm diameter) to large renal masses ($> 10$ cm), introducing substantial class imbalance and segmentation difficulty for small lesions.
+    \item \textbf{Boundary ambiguity:} Tumor/cyst boundaries are often ambiguous, particularly for small lesions, low-contrast interfaces, and cases with peritumoral inflammation or edema. This ambiguity affects both manual annotation consistency and automated segmentation accuracy.
+    \item \textbf{Potential domain shift:} Performance on KiTS23 may not generalize to CT data from other institutions, scanners, or patient populations. External validation on multi-center data is identified as future work.
+\end{itemize}
+
+These challenges motivate several design decisions including conservative post-processing thresholds, test-time augmentation, and explicit documentation of limitations.
+
+\subsection{Summary}
+
+KiTS23 provides a strong benchmark foundation for NephroVision, offering expert-annotated CT volumes with kidney and tumor/cyst labels that support the project goal of 3D semantic segmentation. The dataset's clinical relevance, benchmark status, and public availability make it suitable for developing and evaluating an academic decision-support prototype.
+
+However, the project focuses on a documented academic prototype evaluated on its own held-out test subset of 64 cases, rather than official challenge leaderboard performance. This evaluation approach enables controlled assessment of the NephroVision pipeline while maintaining clear documentation of the evaluation setup, preprocessing decisions, and performance metrics. The distinction between official KiTS23 challenge results and NephroVision's project-defined evaluation is maintained throughout this paper.

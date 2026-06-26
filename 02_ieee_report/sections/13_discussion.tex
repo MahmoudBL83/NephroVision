@@ -1,0 +1,125 @@
+\section{Discussion}
+
+This section interprets the evaluation results, reflects on engineering decisions, and positions NephroVision within the context of academic biomedical engineering practice. All claims are bounded by the scope of an academic prototype evaluated on a project-defined held-out subset of the KiTS23 dataset. No clinical validation is claimed.
+
+\subsection{What the Results Mean}
+
+The evaluation results demonstrate a clear performance pattern: robust kidney segmentation (Dice $0.9307 \pm 0.064$) and reliable tumor detection ($100\%$ on 64 cases) with moderate tumor boundary precision (Dice $0.6558 \pm 0.262$, HD95 $67.35$ mm).
+
+The kidney Dice of $0.9307$ indicates that the model consistently identifies renal parenchyma with high volumetric overlap to expert annotations. This level of performance is sufficient for tasks that require gross anatomical localization, such as identifying the kidney as a region of interest or computing approximate kidney volume.
+
+The tumor Dice of $0.6558$ requires more careful interpretation. The mean value reflects moderate overlap, but the high standard deviation ($0.262$) indicates substantial case-to-case variability. Some tumors---particularly large, well-circumscribed masses with clear contrast to surrounding parenchyma---achieve Dice scores comparable to kidney segmentation. Small, infiltrative, or low-contrast tumors perform considerably worse. This variability is expected and consistent with the challenging nature of tumor segmentation in the KiTS23 dataset.
+
+The $100\%$ tumor detection rate confirms that the model identifies tumor presence in every test case containing a tumor. This is a clinically relevant property: a decision-support tool must first detect the lesion before delineating its boundaries. Detection failure (false negative) would be more consequential in a clinical context than boundary imprecision, because a missed lesion would not be available for physician review. The system's detection sensitivity is therefore a strength, even though boundary precision remains moderate.
+
+\subsection{Why Kidney Segmentation Performance Is Strong}
+
+Kidney segmentation benefits from several favorable characteristics:
+
+\begin{itemize}
+    \item \textbf{Consistent morphology:} The kidney has a relatively stable shape and location across patients. While size varies with body habitus and pathology, the overall bean-like morphology and retroperitoneal position are consistent.
+    \item \textbf{Clear contrast boundaries:} The kidney is surrounded by perirenal fat, which provides a high-contrast boundary on CT. The Hounsfield-unit difference between renal parenchyma (approximately 30--50 HU on non-contrast, 100--200 HU on contrast-enhanced scans) and perirenal fat (approximately $-100$ to $-50$ HU) creates a sharp edge that deep learning models learn reliably.
+    \item \textbf{Large spatial extent:} The kidney typically occupies tens of thousands of voxels in a CT volume. Large structures are less sensitive to boundary displacements in terms of Dice score: a few voxels of boundary error affect a smaller proportion of the total volume.
+    \item \textbf{Abundant training examples:} Nearly every case in the KiTS23 dataset contains both kidneys, providing a large and consistent training signal for the kidney class.
+\end{itemize}
+
+These factors together enable the high kidney Dice of $0.9307$ with low variance across cases.
+
+\subsection{Why Tumor/Cyst Segmentation Remains Harder}
+
+Tumor segmentation presents fundamentally harder challenges than kidney segmentation:
+
+\begin{itemize}
+    \item \textbf{Small lesion size:} Small tumors occupy tens to hundreds of voxels. For a structure of $n$ voxels, a boundary displacement of $d$ voxels in each direction affects a larger fraction of the total volume. A displacement that causes a $1\%$ Dice reduction for a $10^5$-voxel kidney can cause a $50\%$ Dice reduction for a $10^2$-voxel tumor.
+    \item \textbf{Boundary ambiguity:} Tumor boundaries on CT are often indistinct. Infiltrative tumors blend into surrounding parenchyma, cystic lesions have thin walls at the resolution limit of CT, and peritumoral inflammation or edema obscures the true anatomical boundary. This ambiguity affects both automated segmentation and manual annotation consistency.
+    \item \textbf{Heterogeneous appearance:} Renal masses span a wide pathological spectrum---solid renal cell carcinomas, angiomyolipomas, simple cysts, complex cystic lesions---each with different CT appearance. The merged tumor/cyst class further increases intra-class variability, requiring the model to learn a single representation for diverse morphologies.
+    \item \textbf{Class imbalance:} Tumor voxels constitute a small fraction of the total volume in most cases, creating a class imbalance that biases learning toward background and kidney.
+    \item \textbf{Annotation variability:} The KiTS23 dataset, like all medical imaging datasets, exhibits inter-annotator variability at tumor boundaries. The reported metrics compare predictions against these annotations, but the annotations themselves have uncertainty that sets an upper bound on achievable performance.
+\end{itemize}
+
+These factors collectively explain the lower tumor Dice ($0.6558$) and higher standard deviation ($0.262$) compared to kidney segmentation.
+
+\subsection{How Development Documentation Improved the Project}
+
+The post-mid-year emphasis on comprehensive documentation directly improved the project in several ways:
+
+\begin{itemize}
+    \item \textbf{Process transparency:} The development documentation records not just final results but the engineering process---what decisions were made, why, and what alternatives were considered. This transparency is essential for academic review and defense.
+    \item \textbf{Reproducibility:} The experiment log (\texttt{experiment\_log.md}), model training documentation (\texttt{model\_training\_documentation.md}), and reproducibility notes (\texttt{reproducibility\_notes.md}) enable reconstruction of the development environment and training procedures. This satisfies a core requirement of scientific reporting.
+    \item \textbf{Failure awareness:} Documentation of failure cases and cyst/tumor segmentation challenges ensures that limitations are explicitly recognized rather than hidden. This honesty strengthens the project's credibility.
+    \item \textbf{Audit trail:} The chronological record of experiments with decisions (adopt, modify, discard) demonstrates systematic methodology rather than ad-hoc trial and error.
+\end{itemize}
+
+The documentation framework transformed the project from a model-focused implementation into a documented engineering process, directly addressing the mid-year feedback.
+
+\subsection{How Web Visualization Adds Usability}
+
+The browser-based 3D visualization interface provides practical value beyond what a segmentation mask alone offers:
+
+\begin{itemize}
+    \item \textbf{Accessibility:} Users can inspect segmentation results from any device with a web browser, without installing specialized medical imaging software (e.g., 3D Slicer, ITK-SNAP).
+    \item \textbf{Interactive review:} The ability to rotate, zoom, and toggle class visibility enables detailed inspection of segmentation boundaries from any angle, supporting physician review.
+    \item \textbf{Quantitative context:} Displaying volumetric statistics alongside the 3D visualization provides immediate quantitative context---kidney volume, tumor volume, detection status---without requiring separate measurement tools.
+    \item \textbf{Decision-support integration:} The web interface is designed as a review tool, consistent with the decision-support framing. Results are presented for physician interpretation, not as automated decisions.
+\end{itemize}
+
+The visualization layer demonstrates integration of the segmentation pipeline with a user-facing application, showing how technical output can be made accessible to clinical users.
+
+\subsection{How Safety Framing Affects Interpretation}
+
+The explicit safety framing as an academic decision-support prototype fundamentally affects how the results should be interpreted:
+
+\begin{itemize}
+    \item \textbf{Results are not clinical evidence:} The evaluation metrics demonstrate technical performance on a benchmark dataset. They do not constitute clinical evidence of effectiveness, safety, or utility in patient care.
+    \item \textbf{Performance boundaries are explicit:} The moderate tumor Dice is not a weakness to be hidden but a documented limitation that informs appropriate use. Users who understand that tumor boundary precision is moderate will not over-rely on the system for millimeter-precision surgical planning.
+    \item \textbf{Physician review is assumed:} The system assumes that all outputs are reviewed by a qualified physician. Under this assumption, the consequences of false positives (dismissed during review) and false negatives (caught by the physician) are mitigated.
+    \item \textbf{Decision-support, not diagnosis:} The safety framing separates the system's role (anatomical delineation and quantification) from the physician's role (diagnosis and treatment planning). This separation prevents misinterpretation of segmentation outputs as diagnostic conclusions.
+\end{itemize}
+
+The safety framing converts what might be seen as performance limitations into appropriate boundary conditions for safe use. This is consistent with the regulatory principle that medical device safety depends on both technical performance and appropriate use context.
+
+\subsection{Comparison Against Acceptance Criteria}
+
+All six acceptance criteria are met with PASS status (Table~\ref{tab:acceptance_criteria}):
+
+\begin{itemize}
+    \item Kidney Dice $0.9307$ exceeds the $\geq 0.85$ target.
+    \item Tumor Dice $0.6558$ exceeds the $\geq 0.50$ target.
+    \item Mean Dice $0.7933$ exceeds the $\geq 0.65$ target.
+    \item HD95 Kidney $19.98$ mm is below the $< 30$ mm threshold.
+    \item HD95 Tumor $67.35$ mm is below the $< 100$ mm threshold.
+    \item Tumor Detection Rate $100\%$ exceeds the $\geq 90\%$ target.
+\end{itemize}
+
+Meeting these criteria indicates that the system achieves its predefined performance targets for an academic prototype. However, meeting acceptance criteria does not imply clinical readiness. The criteria were defined for the graduation project context, not for regulatory approval or clinical deployment. The targets were set based on the expected difficulty of the task and the capabilities of the 3D U-Net architecture, not based on clinical requirements or regulatory standards.
+
+The comparison confirms that NephroVision performs as intended within its defined scope, but the scope itself---academic prototype, KiTS23 dataset, decision-support use---limits what these results imply.
+
+\subsection{Practical Value as an Academic Biomedical Engineering Prototype}
+
+NephroVision demonstrates the integration of multiple biomedical engineering competencies into a documented, functional system:
+
+\begin{itemize}
+    \item \textbf{Medical imaging processing:} Handling NIfTI CT volumes, applying HU-based preprocessing, and working with volumetric medical data.
+    \item \textbf{Deep learning implementation:} Designing and training a 3D U-Net for semantic segmentation, with documented hyperparameters and training procedures.
+    \item \textbf{Software system design:} Building an end-to-end pipeline from data ingestion through inference and web-based visualization.
+    \item \textbf{Safety and regulatory awareness:} Documenting intended use, limitations, risks, and regulatory gaps consistent with medical device software practices.
+    \item \textbf{Documentation discipline:} Maintaining comprehensive development documentation that records process, decisions, and challenges.
+\end{itemize}
+
+The project demonstrates that an academic team can build a functional medical image segmentation system with documented engineering practices. The system achieves robust performance on kidney segmentation and reliable tumor detection, while transparently reporting the moderate tumor boundary precision that reflects the inherent difficulty of the task.
+
+\subsection{What Should Be Improved Before Clinical Translation}
+
+Before any clinical deployment, the following improvements would be necessary:
+
+\begin{itemize}
+    \item \textbf{External validation:} Performance on KiTS23 does not guarantee equivalent performance on data from other institutions, scanners, or patient populations. Multi-center, multi-vendor validation with diverse clinical data is essential.
+    \item \textbf{Tumor boundary precision:} The tumor Dice of $0.6558$ and HD95 of $67.35$ mm indicate that boundary accuracy is moderate. Improvements in boundary-aware loss functions, deeper architectures, or additional training data could reduce this gap.
+    \item \textbf{Cyst-tumor differentiation:} The merged tumor/cyst class is a limitation imposed by the dataset. A clinical system would benefit from distinguishing these entities, potentially through multiphase CT analysis or integration with additional imaging modalities.
+    \item \textbf{Uncertainty quantification:} The current system produces point estimates without confidence intervals per prediction. Adding uncertainty estimation would help physicians assess which predictions are reliable and which require closer scrutiny.
+    \item \textbf{Usability evaluation:} No formal usability study with clinicians has been conducted. Understanding how radiologists and urologists interact with the system is necessary for safe and effective integration into clinical workflows.
+    \item \textbf{Regulatory compliance:} The regulatory gaps documented in Section~XI (cybersecurity, risk management, quality management system, post-market surveillance) must be addressed before any clinical deployment.
+\end{itemize}
+
+These improvements are within the scope of future work and do not detract from the project's value as an academic prototype. The transparent identification of these gaps is itself a contribution, distinguishing NephroVision from systems that overstate their readiness.

@@ -1,0 +1,23 @@
+﻿\section{Results and Discussion}
+
+\subsection{Metrics}
+
+Evaluation uses Dice Similarity Coefficient (volumetric overlap), 95th percentile Hausdorff Distance (boundary accuracy, mm), and tumor detection rate (binary presence/absence per case).
+
+\subsection{Results}
+
+\input{tables/table2.tex}
+
+Table~\ref{tab:results} presents final test set performance on 64 independent held-out KiTS23 cases and acceptance criteria. All six criteria are met with PASS status.
+
+The model achieves robust kidney segmentation (Dice $0.9307 \pm 0.064$) with low variance, attributable to consistent kidney morphology, large spatial extent, and clear CT boundaries with surrounding fat. Tumor segmentation (Dice $0.6558 \pm 0.262$) is moderate and variable. The mean Dice is $0.7933$ and tumor detection rate is $100\%$ ($64/64$).
+
+Kidney HD95 ($19.98$ mm) reflects reasonably precise boundaries. Tumor HD95 ($67.35$ mm) indicates substantial boundary uncertainty, consistent with the tumor Dice standard deviation.
+
+\subsection{Discussion}
+
+The performance gap between kidney (Dice $0.9307$) and tumor (Dice $0.6558$) reflects fundamental differences in the segmentation task. Kidneys are large, consistent organs with clear boundaries; tumors are small, variable lesions with ambiguous margins. Dice is hypersensitive to boundary errors on small objects: a 1-voxel shift on a 100-voxel tumor reduces Dice to approximately 0.70, while the same error on a 100,000-voxel kidney is negligible.
+
+The $100\%$ tumor detection rate indicates correct identification of tumor presence in every test case, but this is distinct from segmentation accuracy. A case may be correctly detected while having imprecise boundaries. The system prioritizes detection sensitivity---false negatives (missed tumors) are more consequential than false positives in a decision-support workflow where physician review catches errors.
+
+All results are analytical validation on the project-defined 64-case held-out KiTS23 subset. No prospective clinical trial, external dataset, or human expert comparison was conducted. Clinical validation is future work.

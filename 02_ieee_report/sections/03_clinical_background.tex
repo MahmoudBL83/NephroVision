@@ -1,0 +1,88 @@
+\section{Clinical Background}
+
+This section provides the clinical and biomedical context motivating NephroVision. The discussion establishes the role of CT imaging in renal mass assessment, the importance of anatomical delineation, the limitations of manual segmentation, and the distinction between segmentation support and diagnostic decision-making.
+
+\subsection{Role of CT Imaging in Renal Mass Assessment}
+
+Contrast-enhanced computed tomography (CT) is the standard imaging modality for evaluating kidney anatomy and renal masses \cite{ct_imaging_kidney}. CT acquisition in Hounsfield units (HU) quantifies tissue X-ray attenuation, enabling differentiation between soft tissue, fat, fluid, and contrast-enhanced vasculature. Typical renal imaging protocols acquire multiple phases---corticomedullary, nephrographic, and excretory---each highlighting different anatomical and pathological features \cite{ct_phases_renal}.
+
+The nephrographic phase is particularly important for tumor detection, as renal cell carcinomas often exhibit heterogeneous enhancement patterns relative to normal parenchyma \cite{renal_cell_carcinoma_imaging}. CT provides high spatial resolution, volumetric coverage, and reproducible acquisition, making it the preferred modality for renal mass characterization, staging, and surveillance.
+
+\subsection{Kidney Localization and Tumor Delineation}
+
+Accurate identification of kidney boundaries and tumor/cyst regions is fundamental to radiological assessment. Kidney localization defines the anatomical region of interest, isolating renal tissue from surrounding retroperitoneal structures. Tumor delineation specifies lesion extent, morphology, and spatial relationship to the renal capsule, collecting system, and adjacent vasculature \cite{renal_anatomy_imaging}.
+
+These delineations support several review tasks:
+\begin{itemize}
+    \item Assessment of tumor size, location, and growth over time.
+    \item Evaluation of lesion morphology (solid, cystic, mixed).
+    \item Spatial relationship to renal vasculature and collecting system.
+    \item Preoperative planning context for partial or radical nephrectomy.
+\end{itemize}
+
+Automated delineation can support review by providing consistent, reproducible boundary proposals that reduce the manual effort required for each case.
+
+\subsection{Volumetric Quantification for Review and Planning}
+
+Linear measurements (maximum axial diameter) are the conventional metric for tumor sizing, but volumetric quantification offers a more comprehensive characterization of lesion burden \cite{tumor_volumetry}. Three-dimensional volume measurements can capture irregular tumor morphology that single-axis measurements miss, and can assist volumetric assessment of treatment response over serial examinations.
+
+NephroVision produces volumetric statistics including kidney volume and tumor/cyst volume. These metrics can support review by:
+\begin{itemize}
+    \item Providing reproducible volume estimates across time points.
+    \item Quantifying organ and lesion metrics consistently.
+    \item Offering 3D spatial context through interactive visualization.
+\end{itemize}
+
+Volumetric outputs are decision-support information. They do not determine diagnosis or treatment. All volumetric results require physician interpretation within the full clinical context.
+
+\subsection{Challenges of Manual Segmentation}
+
+Manual segmentation of kidney and tumor/cyst regions from CT volumes faces several practical limitations:
+
+\begin{itemize}
+    \item \textbf{Time consumption:} Delineating a single CT volume with hundreds of slices requires substantial radiologist time, limiting throughput in busy clinical workflows \cite{manual_segmentation_time}.
+    \item \textbf{Inter-observer variability:} Different radiologists draw different boundaries for the same tumor, introducing variability that affects consistency across readers and institutions \cite{interobserver_variability}.
+    \item \textbf{Intra-observer variability:} The same radiologist may produce different delineations on repeat segmentation, reflecting the subjective nature of boundary placement.
+    \item \textbf{Cost:} Expert radiologist time is a scarce and expensive resource; repetitive segmentation tasks compete with higher-value diagnostic work.
+    \item \textbf{Fatigue and attention:} Prolonged manual segmentation introduces fatigue-related errors, particularly for small or ambiguous lesions.
+\end{itemize}
+
+These challenges motivate the development of automated segmentation support that can reduce manual effort while preserving physician oversight.
+
+\subsection{Segmentation Support vs. Diagnosis}
+
+A critical distinction must be drawn between segmentation support and diagnostic decision-making. NephroVision performs anatomical delineation---identifying which voxels belong to kidney and tumor/cyst classes---but does not diagnose cancer, classify tumor subtype, determine malignancy, or recommend treatment \cite{decision_support_scope}.
+
+\begin{itemize}
+    \item \textbf{Segmentation support:} Producing spatial masks and volumetric statistics that summarize image content.
+    \item \textbf{Diagnosis:} Determining the nature, significance, and clinical implications of findings---a task requiring physician judgment, clinical history, laboratory data, and multi-modality correlation.
+\end{itemize}
+
+The system can support review by surfacing regions of interest and quantifying their extent, but the diagnostic interpretation remains the responsibility of the qualified physician. This framing aligns with the decision-support paradigm established for medical AI systems \cite{ai_decision_support_framework}.
+
+\subsection{Necessity of Physician Oversight}
+
+Physician oversight is essential for several reasons:
+
+\begin{itemize}
+    \item \textbf{Contextual interpretation:} Segmentation outputs must be interpreted alongside clinical history, patient symptoms, laboratory results, and prior imaging---context unavailable to the segmentation model.
+    \item \textbf{Error detection:} Automated segmentation may produce false positives, false negatives, or boundary errors. Physician review detects and corrects these errors before they influence patient management.
+    \item \textbf{Clinical judgment:} Treatment decisions depend on factors beyond segmentation, including patient comorbidities, renal function, surgical feasibility, and patient preferences.
+    \item \textbf{Accountability:} Clinical decisions carry legal and ethical responsibility. A segmentation model cannot assume accountability; the physician remains the decision-maker.
+\end{itemize}
+
+For these reasons, NephroVision is explicitly designed as a decision-support tool. All outputs require physician review before any clinical use \cite{iec62304, clinical_ai_oversight}.
+
+\subsection{Biomedical Engineering Scope}
+
+NephroVision is a biomedical engineering project integrating multiple technical disciplines:
+
+\begin{itemize}
+    \item \textbf{Medical imaging:} Processing contrast-enhanced CT volumes in Hounsfield units, with preprocessing informed by tissue attenuation properties.
+    \item \textbf{AI segmentation:} Applying 3D deep learning (U-Net architecture) to volumetric medical image data, addressing class imbalance, boundary ambiguity, and limited annotations.
+    \item \textbf{Software system design:} Building a functional pipeline from input handling through preprocessing, inference, post-processing, and web-based 3D visualization.
+    \item \textbf{Safety documentation:} Applying IEC 62304 software lifecycle principles, documenting intended use, risks, and limitations appropriate for an academic prototype \cite{iec62304}.
+    \item \textbf{Human-in-the-loop decision support:} Designing the system to augment rather than replace physician judgment, with explicit review requirements and safety framing.
+\end{itemize}
+
+This multidisciplinary integration characterizes NephroVision as a biomedical engineering contribution: applying engineering methods to a clinical problem while respecting the safety, regulatory, and human-factors constraints of medical software.

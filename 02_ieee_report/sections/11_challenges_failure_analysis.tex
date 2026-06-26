@@ -1,0 +1,219 @@
+\section{Challenges and Failure Analysis}
+
+This section provides an honest assessment of the technical challenges encountered during development and the failure modes observed in the final system. Documenting these challenges is essential for understanding system limitations and guiding future improvements.
+
+\subsection{Why Tumor/Cyst Segmentation Is More Challenging Than Kidney Segmentation}
+
+Kidney and tumor/cyst segmentation present fundamentally different levels of difficulty due to anatomical and imaging characteristics.
+
+\textbf{Kidney segmentation} benefits from favorable properties:
+\begin{itemize}
+    \item Large organ size (typically hundreds of thousands of voxels)
+    \item Consistent bean-like anatomical shape
+    \item Predictable retroperitoneal location
+    \item Relatively clear boundaries with surrounding fat and muscle
+    \item Homogeneous parenchymal appearance in contrast-enhanced CT
+\end{itemize}
+
+\textbf{Tumor/cyst segmentation} faces multiple compounding challenges:
+\begin{itemize}
+    \item \textbf{Small lesion size:} Tumors can occupy as few as 100--200 voxels, making them sensitive to even minor boundary errors
+    \item \textbf{Boundary ambiguity:} Malignant tumors may infiltrate renal parenchyma without clear capsule formation
+    \item \textbf{Heterogeneous appearance:} Lesions span a wide spectrum from simple cysts to complex masses with necrosis, hemorrhage, or calcification
+    \item \textbf{Class imbalance:} Tumor/cyst voxels are a tiny fraction of the total volume
+    \item \textbf{Cyst/tumor ambiguity:} Under the KiTS23 merged-class convention, the model cannot distinguish benign cysts from malignant tumors
+\end{itemize}
+
+These factors explain the performance gap: \textbf{Kidney Dice 0.9307 $\pm$ 0.064} vs. \textbf{Tumor Dice 0.6558 $\pm$ 0.262}.
+
+\subsection{Tumor Detection Versus Tumor Boundary Segmentation}
+
+It is critical to distinguish between two related but distinct tasks:
+
+\textbf{Tumor detection} answers the binary question: "Is there a tumor in this case?" The system achieved 100\% tumor detection rate (64/64 cases) on the held-out test set, meaning the model identified the presence of a tumor in every case where one existed.
+
+\textbf{Tumor boundary segmentation} answers the voxel-level question: "Which exact voxels belong to the tumor?" This task requires precise delineation of tumor margins, which is substantially more difficult and is reflected in the moderate Dice score of 0.6558.
+
+The distinction is clinically significant: a system that detects all tumors but estimates boundaries approximately can support triage and measurement workflows, while a system that misses tumors entirely poses unacceptable clinical risk regardless of boundary quality. NephroVision achieves reliable detection with moderate boundary precision, positioning it as a decision-support tool rather than an autonomous diagnostic system.
+
+\subsection{Why Tumor Dice Is Lower Than Kidney Dice}
+
+The Dice similarity coefficient measures volumetric overlap between predicted and ground-truth segmentations. The observed performance gap (Kidney Dice 0.9307 vs. Tumor Dice 0.6558) reflects fundamental anatomical and technical factors.
+
+\textbf{Anatomical factors:}
+\begin{itemize}
+    \item Kidneys are large, consistent organs with clear boundaries
+    \item Tumors are small, variable lesions with ambiguous margins
+    \item Tumor size variability across cases (standard deviation 0.262) indicates inconsistent performance across lesion sizes
+\end{itemize}
+
+\textbf{Technical factors:}
+\begin{itemize}
+    \item Dice is hypersensitive to boundary errors on small objects
+    \item A 1-voxel boundary shift on a 100-voxel lesion reduces Dice from 1.0 to approximately 0.70
+    \item The same 1-voxel error on a 100,000-voxel kidney is negligible
+    \item Partial volume effects at tissue interfaces blur tumor boundaries at the voxel level
+\end{itemize}
+
+The tumor Dice of 0.6558 $\pm$ 0.262 is consistent with the difficulty of the KiTS23 tumor segmentation task. Published challenge baselines show similar tumor Dice levels, confirming that this performance range reflects inherent task difficulty rather than implementation error.
+
+\subsection{Impact of Small Lesions on Dice Score}
+
+Small tumors disproportionately impact Dice score due to the metric's sensitivity to boundary errors on small objects.
+
+For small objects, Dice is \textbf{hypersensitive} to boundary errors. Consider two hypothetical tumors:
+
+\begin{itemize}
+    \item \textbf{Large tumor (10,000 voxels):} A 1-voxel boundary shift reduces Dice from 1.0 to approximately 0.97
+    \item \textbf{Small tumor (100 voxels):} A 1-voxel boundary shift reduces Dice from 1.0 to approximately 0.70
+    \item \textbf{Small tumor (100 voxels):} A 2-voxel boundary shift reduces Dice to approximately 0.30
+\end{itemize}
+
+This mathematical property means that even a model with excellent detection capability and reasonable boundary accuracy will report moderate Dice scores when evaluated on datasets containing many small lesions. The large standard deviation in tumor Dice (0.262) suggests that performance varies substantially across lesion sizes, with small tumors contributing to lower average Dice.
+
+\subsection{Boundary Ambiguity and Heterogeneous Appearance}
+
+Tumor boundaries in renal CT are often unclear due to multiple factors:
+
+\textbf{Infiltrative growth patterns:} Malignant renal cell carcinomas may infiltrate surrounding parenchyma without forming a distinct capsule, creating gradual transitions rather than sharp boundaries.
+
+\textbf{Partial volume effects:} At tissue interfaces, a single voxel may contain a mixture of tumor and normal tissue, making the "correct" boundary ambiguous even for human experts.
+
+\textbf{Heterogeneous internal structure:} Tumors may contain regions of necrosis, hemorrhage, or calcification with different CT attenuation than viable tumor tissue, complicating boundary delineation.
+
+\textbf{Cyst/tumor visual similarity:} Simple cysts and hypovascular tumors can appear similar on contrast-enhanced CT, particularly when small. The KiTS23 merged-class convention sidesteps this classification problem but means the model sees two visually distinct entities under one label.
+
+These factors contribute to the high Hausdorff Distance (HD95) for tumor segmentation (67.35 mm) compared to kidney (19.98 mm), quantifying the worst-case boundary error.
+
+\subsection{Possible False Positives and False Negatives}
+
+Despite the 100\% detection rate on the test set, several failure modes remain possible:
+
+\textbf{False negatives (missed tumors):}
+\begin{itemize}
+    \item Very small lesions near the detection threshold may be missed
+    \item Isodense lesions with intensity similar to surrounding parenchyma may be under-segmented
+    \item Lesions at kidney boundaries may be partially missed due to partial volume effects
+\end{itemize}
+
+\textbf{False positives (spurious predictions):}
+\begin{itemize}
+    \item Image noise or artifacts may be misclassified as tumor tissue
+    \item Normal anatomical structures (vessels, collecting system) may be incorrectly labeled as tumor
+    \item Residual false positive blobs larger than the 100-voxel removal threshold may persist
+\end{itemize}
+
+\textbf{Boundary errors:}
+\begin{itemize}
+    \item Under-segmentation: predicted mask smaller than true lesion, underestimating volume
+    \item Over-segmentation: predicted mask extends beyond true lesion into healthy tissue
+    \item Boundary leakage: predicted tumor extends into adjacent structures
+\end{itemize}
+
+These failure modes carry clinical risk if outputs are used without physician review. A missed malignant tumor could delay diagnosis, while a false positive could lead to unnecessary intervention. This risk is precisely why the system is positioned as decision-support requiring physician oversight.
+
+\subsection{Domain Shift Outside KiTS23}
+
+The model was trained and evaluated exclusively on the KiTS23 dataset. Performance on CT volumes from different sources is unknown and may be substantially worse due to domain shift.
+
+\textbf{Potential sources of domain shift:}
+\begin{itemize}
+    \item Different CT scanner manufacturers and models
+    \item Varying acquisition protocols (kVp, mAs, reconstruction kernel)
+    \item Different contrast timing and injection protocols
+    \item Non-contrast CT scans (KiTS23 uses contrast-enhanced CT)
+    \item Different patient populations and demographics
+    \item Different annotation conventions or labeling quality
+\end{itemize}
+
+The model may have learned spurious correlations specific to the KiTS23 data distribution. Without external validation, generalizability to clinical practice remains unproven. This limitation is explicitly acknowledged in all documentation and presentation materials.
+
+\subsection{Risk Mitigation Strategies}
+
+The system incorporates multiple layers of risk mitigation:
+
+\textbf{Post-processing filtering:}
+\begin{itemize}
+    \item Connected-component analysis removes kidney blobs $<$ 5000 voxels and tumor blobs $<$ 100 voxels
+    \item Conservative thresholds prioritize detection sensitivity over precision
+    \item Reduces false positive noise while preserving small true lesions
+\end{itemize}
+
+\textbf{Volumetric statistics:}
+\begin{itemize}
+    \item System reports kidney and tumor volumes alongside segmentation masks
+    \item Provides clinically relevant quantitative output even when boundaries are approximate
+    \item Enables physicians to assess whether reported volumes are plausible
+\end{itemize}
+
+\textbf{Visual review interface:}
+\begin{itemize}
+    \item Web-based 3D visualization allows physicians to inspect segmentation results
+    \item Side-by-side comparison of CT volume and predicted mask enables rapid identification of errors
+    \item Interactive interface supports physician judgment rather than replacing it
+\end{itemize}
+
+\textbf{Physician oversight requirement:}
+\begin{itemize}
+    \item All documentation explicitly states that outputs require physician review
+    \item System is classified as decision-support, not autonomous diagnosis
+    \item IEC 62304 Class B safety documentation establishes regulatory boundaries
+    \item Intended-use statement clarifies that all clinical decisions remain the responsibility of qualified healthcare professionals
+\end{itemize}
+
+\textbf{Test-time augmentation:}
+\begin{itemize}
+    \item 8 flip combinations reduce boundary noise and improve prediction consistency
+    \item Averaging across augmented versions smooths predictions and reduces spurious variations
+\end{itemize}
+
+\textbf{Sliding-window inference:}
+\begin{itemize}
+    \item 50\% overlap between adjacent patches minimizes stitching artifacts
+    \item Enables processing of arbitrarily large volumes without memory constraints
+\end{itemize}
+
+Despite these mitigations, residual errors remain. The system is not autonomous and should not be used without physician review.
+
+\subsection{Remaining Limitations and Future Work}
+
+Several limitations persist and require future investigation:
+
+\textbf{Tumor boundary accuracy:}
+\begin{itemize}
+    \item Tumor Dice of 0.6558 indicates moderate boundary precision
+    \item HD95 of 67.35 mm confirms significant boundary uncertainty
+    \item Future work should evaluate boundary-aware loss functions (e.g., Boundary loss, Hausdorff loss)
+\end{itemize}
+
+\textbf{Small lesion detection:}
+\begin{itemize}
+    \item Performance on very small lesions ($<$ 100 voxels) is not separately quantified
+    \item Future work should conduct size-stratified analysis to identify minimum detectable lesion size
+\end{itemize}
+
+\textbf{Cyst versus tumor distinction:}
+\begin{itemize}
+    \item Current system cannot distinguish benign cysts from malignant tumors
+    \item Future work could add a classification stage after segmentation
+\end{itemize}
+
+\textbf{External validation:}
+\begin{itemize}
+    \item No multi-center or cross-scanner validation has been performed
+    \item Future work must include external validation on diverse clinical datasets
+\end{itemize}
+
+\textbf{Clinical validation:}
+\begin{itemize}
+    \item No prospective clinical trial has been conducted
+    \item Future work should include physician review studies to assess clinical utility
+\end{itemize}
+
+\textbf{Uncertainty quantification:}
+\begin{itemize}
+    \item System does not currently provide confidence estimates for predictions
+    \item Future work could implement Monte Carlo dropout or ensemble methods to flag uncertain regions
+\end{itemize}
+
+These limitations are not hidden weaknesses but known boundaries of the current work. Acknowledging them is essential for patient safety and scientific integrity. The system represents a promising academic prototype that requires further validation before clinical deployment.

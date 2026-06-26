@@ -1,0 +1,9 @@
+﻿\section{Safety, Limitations, and Future Work}
+
+\textbf{Safety and regulatory positioning.} NephroVision is an IEC 62304 Software Safety Class B academic decision-support prototype. It produces segmentation support information, not autonomous diagnoses. All outputs require physician review. The system is not clinically approved, FDA approved, or CE marked. No regulatory submission has been made.
+
+\textbf{Known limitations.} (1) Analytical validation only on KiTS23; no prospective clinical trial or external hospital validation. (2) Possible domain shift on CT from different scanners, protocols, or populations. (3) Moderate tumor boundary precision (Dice $0.6558 \pm 0.262$; HD95 $67.35$ mm). (4) Cannot distinguish benign cysts from malignant tumors. (5) No uncertainty estimation or confidence maps. (6) Cybersecurity hardening is incomplete. (7) Web application is prototype-level.
+
+\textbf{Risk mitigations.} Explicit disclaimers in the web interface; interactive 3D visualization for physician review; documented limitations; conservative post-processing preserving small lesions; human-in-the-loop workflow requiring physician verification.
+
+\textbf{Future work.} High priority: improve tumor boundary accuracy (boundary-aware loss functions); external multi-center validation; evaluate nnU-Net for automated pipeline optimization; prospective clinical evaluation with radiologists. Medium priority: domain generalization through stronger augmentation; uncertainty estimation (Monte Carlo dropout or ensembles); cybersecurity assessment per IEC 81001-5-1. These activities are prerequisites for any clinical deployment.

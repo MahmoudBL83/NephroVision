@@ -1,0 +1,37 @@
+\section{Future Work}
+
+This section identifies directions for further development. All items are planned or desirable extensions, not completed work. They are organized by priority and feasibility within an academic research context.
+
+\subsection{High Priority}
+
+\begin{enumerate}
+    \item \textbf{Improve tumor/cyst boundary segmentation.} The current tumor Dice of $0.6558 \pm 0.262$ and HD95 of $67.35$ mm indicate substantial room for improvement in boundary precision. Future work should evaluate boundary-aware loss functions (boundary loss, Hausdorff distance loss, surface-aware Dice), deeper or wider 3D U-Net variants, and training with more aggressive data augmentation targeting boundary variability.
+    
+    \item \textbf{Evaluate stronger frameworks such as nnU-Net.} The nnU-Net framework \cite{nnunet} automates architecture configuration, preprocessing, training, and post-processing based on dataset properties. Comparing NephroVision's manually configured 3D U-Net against nnU-Net would quantify the headroom available through automated pipeline optimization and identify which components of the current pipeline benefit most from systematic tuning.
+    
+    \item \textbf{Add external multi-center validation.} All current evaluation is on KiTS23 data. External validation on CT volumes from different institutions, scanner manufacturers, acquisition protocols, and patient demographics is essential to assess domain shift and generalizability. This is the highest-priority item for determining whether the system can perform reliably beyond the training distribution.
+    
+    \item \textbf{Conduct prospective clinical evaluation with experts.} A prospective evaluation study with radiologists and urologists reviewing NephroVision outputs would assess the system's impact on interpretation time, measurement consistency, and user confidence. Such a study would provide evidence of clinical utility beyond the analytical validation reported in this paper.
+\end{enumerate}
+
+\subsection{Medium Priority}
+
+\begin{enumerate}
+    \item \textbf{Expand failure case analysis.} The current failure case analysis (\texttt{failure\_cases\_analysis.md}) documents observed failure modes. Expanding this analysis with systematic categorization of failure types (by lesion size, location, contrast phase, scanner type) would inform targeted improvements and provide better expectations for system performance boundaries.
+    
+    \item \textbf{Improve data augmentation and domain generalization.} Current training augmentation is limited. Future work should evaluate stronger augmentation strategies including elastic deformation, intensity perturbation, gamma correction, bias field simulation, and cutout or mixup regularization. These techniques could improve model robustness to the CT appearance variability observed across the KiTS23 dataset and beyond.
+    
+    \item \textbf{Add uncertainty estimation or confidence visualization.} The current system produces point estimates without uncertainty quantification. Implementing Monte Carlo dropout, deep ensemble methods, or evidential deep learning would produce per-voxel confidence maps that help physicians identify regions where predictions are unreliable and require closer scrutiny.
+    
+    \item \textbf{Improve cybersecurity documentation.} Formal cybersecurity assessment has not been conducted. Future work should include threat modeling, penetration testing, encryption verification, and alignment with medical device cybersecurity standards (IEC 81001-5-1, AAMI TIR57). This is a prerequisite for any deployment in a clinical network environment.
+\end{enumerate}
+
+\subsection{Lower Priority}
+
+\begin{enumerate}
+    \item \textbf{Improve usability testing.} The web interface has not undergone formal usability evaluation with clinician users. Future work should include formative usability testing to identify interaction issues and summative testing to measure task completion times, error rates, and user satisfaction, following IEC 62366 usability engineering principles.
+    
+    \item \textbf{Prepare formal clinical validation and regulatory documentation.} Transitioning from academic prototype to regulated medical device requires a clinical validation protocol, risk management file (ISO 14971), software lifecycle documentation (IEC 62304), quality management system (ISO 13485), and regulatory submission preparation. These activities are necessary before any clinical deployment and represent a significant effort beyond the current project scope.
+\end{enumerate}
+
+All future work items are linked to specific limitations documented in Section~XIII and should be prioritized based on project timeline, available resources, and the team's career development objectives following graduation.

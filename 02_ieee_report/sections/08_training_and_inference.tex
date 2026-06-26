@@ -1,0 +1,129 @@
+\section{Training and Inference}
+
+This section documents the model training procedure and inference configuration for NephroVision. Training and inference details are recorded in the project reproducibility artifacts: \texttt{experiment\_log.md}, \texttt{model\_training\_documentation.md}, and \texttt{reproducibility\_notes.md}. Unknown hyperparameters are explicitly marked as TODO and must be completed from these artifacts.
+
+\subsection{Training Objective}
+
+The training objective is to learn a function $f: \mathbb{R}^{D \times H \times W} \rightarrow \{0, 1, 2\}^{D \times H \times W}$ that maps a preprocessed CT volume $X$ to a per-voxel class label $Y$, where class 0 corresponds to background, class 1 to kidney, and class 2 to tumor/cyst. The model is trained end-to-end using supervised learning with expert annotations from the KiTS23 dataset \cite{kits23}.
+
+% TODO: Add loss function. (Expected: Dice-based loss, cross-entropy, or combined DiceCE.)
+% TODO: Add regularization (weight decay, dropout, etc.).
+
+The loss function is minimized with respect to model parameters using gradient-based optimization over multiple training epochs.
+
+\subsection{Dataset Split and Training Organization}
+
+The KiTS23 dataset is partitioned into three subsets to support unbiased model development and evaluation:
+
+\begin{itemize}
+    \item \textbf{Training set:} The majority of cases are used for parameter optimization via backpropagation.
+    \item \textbf{Validation set:} A held-out subset of cases, not used for training, provides an unbiased estimate of model performance during development for hyperparameter tuning and checkpoint selection.
+    \item \textbf{Test set:} 64 independent held-out cases, selected before any model development, are reserved exclusively for final evaluation. These cases are never used during training, validation, or hyperparameter tuning.
+\end{itemize}
+
+% TODO: Add exact training/validation split counts or ratios as documented in experiment_log.md.
+
+The 64-case test set guarantee that the final reported metrics reflect generalization to unseen data, not memorization of training examples.
+
+\subsection{Input Patch Preparation}
+
+Training on full CT volumes is impractical due to GPU memory constraints and the variable dimensions of CT acquisitions. Instead, training is performed on randomly sampled 3D patches:
+
+\begin{itemize}
+    \item \textbf{Patch dimensions:} $64 \times 192 \times 192$ voxels, matching the inference patch size to eliminate train--inference distribution mismatch.
+    \item \textbf{Sampling strategy:} Patches are randomly cropped from training volumes at each iteration. TODO: Document whether sampling was uniform, balanced by foreground class, or weighted by class presence.
+    \item \textbf{Data augmentation:} On-the-fly augmentations are applied to training patches to improve generalization. TODO: Document specific augmentation types (e.g., random flipping, rotation, scaling, elastic deformation, intensity perturbation).
+\end{itemize}
+
+Patch-based training enables the model to learn from a large number of spatial contexts per volume while remaining within GPU memory limits. The same patch dimensions are used during inference, ensuring that the model operates on inputs of familiar scale.
+
+\subsection{Model Training Setup}
+
+The 3D U-Net \cite{unet3d} is trained on the KiTS23 training set using a supervised learning framework. The exact training configuration is documented in \texttt{model\_training\_documentation.md}. Key components include:
+
+\begin{itemize}
+    \item \textbf{Loss function:} % TODO: Add loss function. (Expected: Dice loss, cross-entropy, or combined DiceCE.)
+    \item \textbf{Optimizer:} % TODO: Add optimizer. (Expected: Adam, AdamW, or SGD.)
+    \item \textbf{Learning rate:} % TODO: Add learning rate. Include initial value and schedule (e.g., cosine annealing, step decay, plateau reduction).
+    \item \textbf{Batch size:} % TODO: Add batch size. Include per-GPU batch size and whether gradient accumulation was used.
+    \item \textbf{Number of epochs:} % TODO: Add number of epochs. Include total epochs and epoch of best checkpoint.
+    \item \textbf{Hardware:} % TODO: Add training hardware. (Expected: GPU model, VRAM, CPU, RAM, OS.)
+    \item \textbf{Training duration:} % TODO: Add training duration. (Expected: wall-clock time in hours.)
+    \item \textbf{Software:} The model is implemented using standard deep learning frameworks with GPU acceleration. TODO: Document Python version, framework (PyTorch/MONAI), and CUDA version.
+\end{itemize}
+
+All training hyperparameters are recorded in the experiment log (\texttt{experiment\_log.md}) for reproducibility. No values not documented in the experiment log are presented as completed.
+
+\subsection{Validation and Checkpoint Selection}
+
+Model checkpoints are saved at regular intervals during training and evaluated on the validation set. The checkpoint selection process ensures that the model deployed for final evaluation represents the best generalization performance observed during development:
+
+\begin{itemize}
+    \item \textbf{Validation metric:} The primary metric for checkpoint selection is the mean Dice score (average of kidney Dice and tumor Dice) computed on the validation set. TODO: Confirm whether mean Dice, validation loss, or another criterion was used.
+    \item \textbf{Evaluation frequency:} Validation is performed at regular intervals during training. TODO: Document evaluation frequency (e.g., every epoch or every N steps).
+    \item \textbf{Checkpoint selection:} The checkpoint achieving the highest validation performance is retained for final evaluation. TODO: Confirm whether the best checkpoint or a model ensemble was used.
+    \item \textbf{Early stopping:} TODO: Document whether early stopping was applied and the patience criterion.
+\end{itemize}
+
+The selected checkpoint is frozen and used for all inference runs on the 64-case test set. No further training or fine-tuning is performed after checkpoint selection.
+
+\subsection{Inference Configuration}
+
+During inference, full CT volumes are processed through a pipeline designed to handle volumes exceeding GPU memory while maintaining prediction consistency. The inference configuration is distinct from the training setup and is applied deterministically to each test case:
+
+\begin{itemize}
+    \item \textbf{Sliding window:} Each volume is traversed with a patch of size $64 \times 192 \times 192$ voxels and 50\% overlap in all three spatial dimensions. The traversal order covers the entire volume extent.
+    \item \textbf{Overlap fusion:} In overlap regions where multiple patches contribute predictions, the final class probability for each voxel is computed as the arithmetic mean of all contributing patch predictions. This averaging produces smooth transitions across patch boundaries and reduces stitching artifacts.
+    \item \textbf{Memory management:} Patches are processed sequentially or in mini-batches depending on available GPU memory. No gradient computation is performed during inference (model in evaluation mode).
+\end{itemize}
+
+The sliding-window strategy ensures that the model receives input patches at the same spatial scale as training, while 50\% overlap ensures that every voxel near a patch boundary is predicted from at least two independent contexts.
+
+\begin{figure}[!t]
+\centering
+% TODO: Replace with actual figure: fig_inference.pdf
+% \includegraphics[width=0.9\linewidth]{figures/fig_inference.pdf}
+\fbox{\parbox{0.7\linewidth}{\centering\vspace{2cm}\textbf{[Placeholder]}\\Inference Workflow Diagram\\\small Sliding Window + TTA (8 Flips) + Overlap Fusion + Post-processing\vspace{2cm}}}
+\caption{Inference workflow. The full CT volume is processed through overlapping patches, augmented with 8 spatial flips, fused via averaging, and refined with connected-component post-processing.}
+\label{fig:inference}
+\end{figure}
+
+\subsection{Test-Time Augmentation}
+
+Test-time augmentation (TTA) is applied during inference to improve prediction robustness, particularly at anatomical boundaries where single-orientation predictions may exhibit artifacts:
+
+\begin{enumerate}
+    \item \textbf{Patch extraction:} For each sliding-window position, patches are extracted from the original volume.
+    \item \textbf{Augmentation:} Each patch is duplicated and transformed with all 8 combinations of flips along the three spatial axes ($x$, $y$, $z$). This produces $2^3 = 8$ augmented versions of each patch.
+    \item \textbf{Forward pass:} Each of the 8 augmented patches is processed independently through the 3D U-Net, producing 8 class probability maps.
+    \item \textbf{Inverse transformation:} Each probability map is un-flipped (the inverse spatial transformation is applied) to return predictions to the original coordinate space.
+    \item \textbf{Averaging:} The 8 probability maps are averaged voxel-wise, producing a single aggregated prediction per patch.
+    \item \textbf{Overlap fusion:} Aggregated predictions from all patches are fused across the volume using the overlap averaging described above.
+\end{enumerate}
+
+The TTA procedure increases inference time by approximately a factor of 8 but is applied only during final inference---not during training or validation. The computation cost is acceptable because inference is performed once per volume on evaluation data, not repeatedly during training iterations.
+
+\subsection{Post-Processing During Inference}
+
+The aggregated probability map from TTA and overlap fusion is converted to a discrete class label per voxel (argmax over the class dimension). Post-processing is then applied to remove spurious detections:
+
+\begin{itemize}
+    \item \textbf{Kidney mask:} Connected-component labeling identifies contiguous regions of kidney-class voxels. Components with fewer than 5000 voxels are set to background (class 0). This threshold eliminates small false-positive predictions in non-renal regions while preserving true kidney structures.
+    \item \textbf{Tumor/cyst mask:} Connected-component analysis is performed independently on the tumor/cyst class. Components with fewer than 100 voxels are removed.
+\end{itemize}
+
+The kidney threshold of 5000 voxels is calibrated to the typical kidney volume in CT (tens of thousands to hundreds of thousands of voxels). The tumor threshold of 100 voxels is deliberately conservative, preserving small true lesions at the cost of retaining some false positives. This design choice prioritizes detection sensitivity over specificity, reflecting the decision-support role of the system---physician review will identify and dismiss false positives, but false negatives (missed small tumors) are more consequential.
+
+Post-processing is applied identically to all inference runs and is documented in the experiment log and reproducibility notes.
+
+\subsection{Reproducibility Notes}
+
+To support reproducibility and defense transparency, the following artifacts record all training and inference details:
+
+\begin{itemize}
+    \item \textbf{\texttt{experiment\_log.md}:} Chronological record of every training run with hyperparameters, validation metrics, observations, and decisions.
+    \item \textbf{\texttt{model\_training\_documentation.md}:} Comprehensive specification of hardware, software, data splits, architecture details, loss function, optimizer, and training hyperparameters.
+    \item \textbf{\texttt{reproducibility\_notes.md}:} Environment specifications (Python version, package versions, CUDA version), random seeds for data splitting and model initialization, exact preprocessing commands, checkpoint file paths, and inference scripts.
+\end{itemize}
+
+Incomplete items in this section (marked with TODO comments) correspond to entries in these artifacts that must be completed by the team before final submission. No undocumented hyperparameter values are presented as completed work. All reported metrics were obtained using the frozen checkpoint evaluated on the 64-case held-out test set with the inference configuration described in this section.

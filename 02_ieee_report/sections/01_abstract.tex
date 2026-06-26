@@ -1,0 +1,21 @@
+% IEEE-style abstract (180--230 words)
+% Rules enforced:
+%   - Decision-support framing only; no clinical validation claims.
+%   - No FDA approval, no autonomous diagnosis, no radiologist replacement.
+%   - All metrics match KNOWN_METRICS.md exactly.
+
+\begin{abstract}
+Manual slice-by-slice delineation of the kidney and renal tumors in contrast-enhanced abdominal CT is labor-intensive and subject to substantial inter-observer variability, limiting throughput in clinical workflows.
+We present NephroVision, an academic decision-support prototype for automated three-dimensional kidney and renal tumor/cyst segmentation.
+The system ingests NIfTI CT volumes, applies Hounsfield-unit clipping ($[-200, 300]$) and min--max normalization, and feeds preprocessed data into a 3D U-Net trained on the KiTS23 challenge dataset.
+Inference uses a sliding-window strategy ($64 \times 192 \times 192$ voxels, $50\%$ overlap) with eight-fold test-time augmentation and conservative connected-component post-processing to suppress spurious detections.
+Segmentation masks, volumetric statistics, and an interactive browser-based 3D visualization are produced for physician review.
+Comprehensive development documentation records preprocessing decisions, training and inference configurations, engineering choices, and tumor/cyst segmentation challenges.
+Evaluated on 64 independent held-out KiTS23 test cases, NephroVision achieved a kidney Dice of $0.9307 \pm 0.064$, tumor Dice of $0.6558 \pm 0.262$, mean Dice of $0.7933$, and a tumor detection rate of $100\%$ ($64/64$).
+Robust kidney segmentation and reliable tumor detection are demonstrated; tumor boundary precision is moderate, consistent with the inherent difficulty of segmenting small, low-contrast lesions.
+The system is not clinically approved and does not replace radiologist interpretation.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Deep learning, medical image segmentation, kidney tumor detection, computed tomography, decision-support system, 3D U-Net.
+\end{IEEEkeywords}

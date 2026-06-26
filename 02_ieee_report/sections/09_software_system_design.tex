@@ -1,0 +1,115 @@
+\section{Software System Design}
+
+This section describes the software system surrounding the segmentation model. NephroVision is implemented as a browser-accessible application that ingests CT volumes, executes the segmentation pipeline, and presents results through an interactive web interface. The system is designed as an academic prototype for decision-support use and is not deployed in any clinical environment.
+
+\subsection{System Architecture Overview}
+
+NephroVision follows a client-server architecture comprising three main components:
+
+\begin{itemize}
+    \item \textbf{Frontend:} A browser-based user interface implemented using standard web technologies (HTML, CSS, JavaScript). The frontend handles file upload, displays segmentation results, and renders interactive 3D visualizations. % TODO: Document specific frontend framework (e.g., React, Vue, plain HTML/JS).
+    \item \textbf{Backend:} A server-side application that orchestrates data ingestion, preprocessing, inference, post-processing, and output generation. The backend exposes an API that the frontend calls to submit volumes and retrieve results. % TODO: Document backend framework (e.g., FastAPI, Flask, Django).
+    \item \textbf{Inference engine:} The 3D U-Net model and associated pipeline (preprocessing, sliding-window inference, TTA, post-processing) are invoked by the backend to process uploaded volumes.
+\end{itemize}
+
+Communication between frontend and backend occurs over HTTP/HTTPS. The 3D visualization is rendered client-side using a WebGL-based library. % TODO: Document 3D visualization library (e.g., Three.js, VTK.js, vtk.js).
+
+The system is designed to run on a single server with GPU acceleration for inference. No distributed computing, load balancing, or multi-user concurrency support is implemented in the current prototype.
+
+\subsection{Data Ingestion}
+
+The system accepts CT volumes in NIfTI format (\texttt{.nii} or \texttt{.nii.gz}), the standard format for medical imaging data that preserves spatial metadata including voxel dimensions, spacing, and orientation.
+
+\begin{itemize}
+    \item \textbf{Upload:} Users upload a NIfTI file through the web interface. The frontend transmits the file to the backend via HTTP multipart form data.
+    \item \textbf{Validation:} The backend validates the uploaded file for correct format, readable metadata, and non-corrupt data. Files that fail validation are rejected with an error message. % TODO: Document specific validation checks (file size limits, format verification, metadata consistency).
+    \item \textbf{Storage:} Uploaded files are stored temporarily on the server for processing. % TODO: Document whether uploaded files are deleted after processing or retained. If retained, document retention policy and access controls.
+\end{itemize}
+
+The ingestion pipeline is designed to handle single-volume uploads. Batch processing of multiple volumes is not implemented in the current prototype.
+
+\subsection{Backend Processing}
+
+Once a volume is uploaded and validated, the backend executes the segmentation pipeline:
+
+\begin{enumerate}
+    \item \textbf{Preprocessing:} The uploaded NIfTI volume is loaded, validated for metadata consistency, clipped to $[-200, 300]$ HU, and normalized to $[0, 1]$ using min--max scaling. This preprocessing is identical to that applied during training.
+    \item \textbf{Inference:} The preprocessed volume is processed through the 3D U-Net using sliding-window inference with $64 \times 192 \times 192$ voxel patches, 50\% overlap, and 8-flip test-time augmentation. The inference engine runs on GPU hardware with sufficient memory to process patches sequentially.
+    \item \textbf{Post-processing:} The raw segmentation mask is refined using connected-component filtering (kidney blobs $< 5000$ voxels removed, tumor blobs $< 100$ voxels removed) to eliminate spurious detections.
+\end{enumerate}
+
+The backend processing pipeline is deterministic and reproducible. Identical preprocessing, inference, and post-processing are applied to all uploaded volumes.
+
+\subsection{Output Generation}
+
+The segmentation pipeline produces three types of output:
+
+\begin{itemize}
+    \item \textbf{Segmentation mask:} A 3D volume of the same spatial dimensions as the input, where each voxel is assigned one of three class labels (background, kidney, tumor/cyst). The mask is stored in NIfTI format and can be downloaded by the user.
+    \item \textbf{Volumetric statistics:} Kidney volume (ml), tumor/cyst volume (ml), and tumor detection status (binary indicator) are computed from the segmentation mask using voxel spacing metadata. These statistics are formatted for display in the web interface.
+    \item \textbf{3D mesh visualization:} The kidney and tumor/cyst segmentation masks are converted to 3D surface meshes using the marching cubes algorithm. The meshes are exported in a format compatible with WebGL rendering (e.g., STL, OBJ, or custom binary format). % TODO: Document exact mesh export format.
+\end{itemize}
+
+All outputs are generated server-side and transmitted to the frontend for display. The segmentation mask and volumetric statistics can be downloaded for offline analysis.
+
+\subsection{Web Interface}
+
+The browser-based web interface provides an accessible visualization of segmentation results without requiring specialized medical imaging software:
+
+\begin{itemize}
+    \item \textbf{Upload panel:} A file input widget allows users to select and upload a NIfTI CT volume. Progress indicators display upload status and processing status. % TODO: Document whether progress indicators are implemented for long-running inference.
+    \item \textbf{3D viewer:} An interactive WebGL-based viewer displays the kidney and tumor/cyst segmentation meshes. Users can rotate, zoom, and pan the 3D view to inspect segmentation results from any angle. Individual classes (kidney, tumor/cyst) can be toggled on or off.
+    \item \textbf{Volumetric statistics panel:} Kidney volume, tumor/cyst volume, and tumor detection status are displayed alongside the 3D visualization in a text-based panel.
+    \item \textbf{Download links:} Users can download the segmentation mask (NIfTI format) and volumetric statistics (text or JSON format) for offline analysis.
+\end{itemize}
+
+The web interface is designed for single-user interaction. Multi-user access, authentication, and session management are not implemented in the current prototype.
+
+\begin{figure}[!t]
+\centering
+% TODO: Replace with actual figure: fig_webapp.pdf
+% \includegraphics[width=0.9\linewidth]{figures/fig_webapp.pdf}
+\fbox{\parbox{0.7\linewidth}{\centering\vspace{2cm}\textbf{[Placeholder]}\\Web Application Screenshot\\\small Upload panel | 3D Viewer | Volumetric Statistics\vspace{2cm}}}
+\caption{Browser-based web application interface. Users upload a NIfTI CT volume, and the system displays an interactive 3D segmentation mesh alongside kidney and tumor volumetric statistics.}
+\label{fig:webapp}
+\end{figure}
+
+\subsection{Safety UX}
+
+The web interface includes explicit safety messaging to prevent misuse and ensure that users understand the system's limitations:
+
+\begin{itemize}
+    \item \textbf{Disclaimer:} A prominent disclaimer is displayed on the interface stating that NephroVision is an academic prototype for decision-support use and is not clinically approved.
+    \item \textbf{Physician review message:} All segmentation outputs are accompanied by a message stating that results require physician review before any clinical application.
+    \item \textbf{Decision-support wording:} The interface consistently uses decision-support language (e.g., ``segmentation support,'' ``volumetric statistics for review'') rather than diagnostic language (e.g., ``diagnosis,'' ``detection of cancer'').
+    \item \textbf{Limitations statement:} The interface includes a brief statement of known limitations, including moderate tumor boundary precision and the merged tumor/cyst class convention.
+\end{itemize}
+
+These safety messages are designed to prevent over-reliance on automated outputs and to reinforce the decision-support role of the system. The disclaimer and physician review message are displayed prominently to ensure visibility.
+
+\subsection{Privacy and Security Considerations}
+
+The current prototype implements basic privacy and security measures, but formal cybersecurity validation has not been conducted:
+
+\begin{itemize}
+    \item \textbf{Uploaded file retention:} % TODO: Document whether uploaded files are deleted after processing. If files are retained, document retention policy, access controls, and encryption at rest.
+    \item \textbf{Model weights:} The trained 3D U-Net model weights are stored on the server and are not exposed to users. % TODO: Document whether model weights are accessible via the API or protected by access controls.
+    \item \textbf{Network security:} Communication between frontend and backend occurs over HTTP. % TODO: Document whether HTTPS/TLS is implemented for encrypted communication.
+    \item \textbf{Input validation:} Uploaded files are validated for format and metadata consistency. Malformed or corrupted files are rejected. % TODO: Document additional input validation measures (e.g., file size limits, content-type verification).
+    \item \textbf{Cybersecurity hardening:} Formal cybersecurity assessment, penetration testing, and compliance with medical device cybersecurity standards (e.g., IEC 81001-5-1) are identified as future work.
+\end{itemize}
+
+The system is not designed for production deployment in clinical environments. Privacy and security measures are appropriate for academic prototype use but require formal validation before any clinical deployment.
+
+\subsection{Maintainability}
+
+The software system is designed to support maintainability and reproducibility:
+
+\begin{itemize}
+    \item \textbf{Configuration files:} Preprocessing parameters (HU clipping range, normalization), inference configuration (patch size, overlap, TTA), and post-processing thresholds (blob removal) are stored in configuration files rather than hardcoded. This enables modification without code changes.
+    \item \textbf{Modular code:} The system is organized into modular components (data ingestion, preprocessing, inference, post-processing, visualization) with clear interfaces. This modularity supports independent testing and future extension.
+    \item \textbf{Reproducibility documentation:} The project maintains comprehensive documentation of environment specifications, random seeds, commands, and checkpoint information in \texttt{reproducibility\_notes.md}. This documentation enables reproduction of the segmentation pipeline on new hardware.
+    \item \textbf{Version control:} The codebase is maintained in version control with commit history documenting changes. % TODO: Document version control system (e.g., Git) and repository structure.
+\end{itemize}
+
+The maintainability design supports future development, including extension to multi-center data, integration with clinical workflows, and formal cybersecurity hardening.

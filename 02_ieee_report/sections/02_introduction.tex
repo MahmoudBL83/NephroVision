@@ -1,0 +1,63 @@
+\section{Introduction}
+
+Renal cell carcinoma accounts for approximately 90\% of kidney cancers and represents a significant global health burden \cite{renal_cancer_stats}. Contrast-enhanced computed tomography (CT) is the primary imaging modality for renal tumor assessment, providing essential anatomical detail for diagnosis, surgical planning, treatment monitoring, and long-term follow-up \cite{ct_imaging_kidney}. Accurate delineation of kidney boundaries and tumor extent is critical for determining resectability, estimating tumor volume, and assessing treatment response.
+
+Manual slice-by-slice segmentation of kidney and renal tumors remains the clinical standard, but this process is labor-intensive, time-consuming, and costly. Studies have demonstrated substantial inter-observer variability in manual delineation, with different radiologists drawing different boundaries for the same tumor \cite{interobserver_variability}. This variability directly affects surgical planning decisions, treatment monitoring accuracy, and longitudinal follow-up consistency. The subjective nature of manual segmentation introduces uncertainty into clinical workflows and limits reproducibility across institutions.
+
+These limitations have motivated the development of automated decision-support tools that can provide consistent, reproducible segmentation while preserving physician oversight. Deep learning approaches, particularly three-dimensional convolutional neural networks, have shown promise in medical image segmentation tasks \cite{unet3d, medical_segmentation_review}. However, translating these methods into clinically useful systems requires careful attention to preprocessing, inference strategies, post-processing, and integration with clinical workflows.
+
+\subsection{Project Objective}
+
+This work presents NephroVision, an academic decision-support prototype for automated kidney and renal tumor/cyst segmentation from abdominal CT volumes. The system aims to:
+\begin{itemize}
+    \item Segment kidney and tumor/cyst regions from contrast-enhanced CT scans.
+    \item Provide volumetric statistics including organ and lesion volumes.
+    \item Generate interactive three-dimensional visualizations for physician review.
+\end{itemize}
+
+NephroVision is designed as a decision-support tool that augments radiologist interpretation rather than replacing it. All segmentation outputs require physician verification before clinical use.
+
+\subsection{Proposed Approach}
+
+The system is trained on the KiTS23 (Kidney Tumor Segmentation Challenge 2023) dataset \cite{kits23}, which provides expert-annotated CT volumes with kidney and tumor/cyst labels. The segmentation pipeline employs a 3D U-Net architecture \cite{unet3d} with the following components:
+
+\begin{itemize}
+    \item \textbf{Preprocessing:} Hounsfield-unit clipping to $[-200, 300]$ and min--max normalization to $[0, 1]$ to standardize intensity distributions.
+    \item \textbf{Inference:} Sliding-window strategy with $64 \times 192 \times 192$ voxel patches and $50\%$ overlap to handle full-volume CT scans within GPU memory constraints.
+    \item \textbf{Test-time augmentation:} Eight-fold flip combinations to reduce boundary noise and improve segmentation stability.
+    \item \textbf{Post-processing:} Conservative connected-component filtering to remove spurious detections while preserving small lesions.
+    \item \textbf{Visualization:} Browser-based interactive 3D rendering for physician review and clinical interpretation.
+\end{itemize}
+
+\subsection{Development Documentation}
+
+Following mid-year feedback emphasizing the importance of transparent development processes, the project maintains comprehensive documentation covering:
+\begin{itemize}
+    \item Preprocessing decisions and their rationale.
+    \item Training and inference configurations with hyperparameter choices.
+    \item Engineering decisions and architectural trade-offs.
+    \item Challenges encountered during development and their mitigations.
+    \item Technical difficulties specific to tumor/cyst segmentation.
+    \item Failure modes, root causes, and implemented safeguards.
+\end{itemize}
+
+This documentation ensures reproducibility and provides a clear audit trail of design decisions.
+
+\subsection{Main Contributions}
+
+The primary contributions of this work are:
+\begin{enumerate}
+    \item A complete 3D deep learning pipeline for kidney and renal tumor/cyst segmentation from CT volumes, achieving robust kidney segmentation (Dice $0.9307 \pm 0.064$) and reliable tumor detection ($100\%$ on 64 held-out test cases).
+    \item Transparent reporting of moderate tumor boundary precision (Dice $0.6558 \pm 0.262$), reflecting the inherent difficulty of segmenting small, low-contrast lesions.
+    \item Comprehensive development documentation addressing preprocessing, training, engineering choices, challenges, and failure analysis.
+    \item An interactive web-based visualization system for physician review of segmentation results.
+    \item Explicit safety framing as an academic decision-support prototype requiring physician oversight, consistent with IEC 62304 Software Safety Class B guidelines \cite{iec62304}.
+\end{enumerate}
+
+\subsection{Safety and Intended Use}
+
+NephroVision is an academic prototype and is not clinically approved. The system does not claim regulatory clearance (FDA, CE, or equivalent) and is not intended for autonomous diagnosis or clinical decision-making without physician review. All segmentation outputs are decision-support information that must be verified by qualified medical professionals before influencing patient care. The system is evaluated exclusively on the KiTS23 dataset; performance on external or multi-center data has not been validated and is identified as future work.
+
+\subsection{Paper Organization}
+
+The remainder of this paper is organized as follows. Section~II provides clinical background on renal anatomy, tumor types, and CT imaging. Section~III reviews related work in medical image segmentation. Section~IV describes the KiTS23 dataset and preprocessing. Section~V details the development process and documentation. Section~VI presents the methodology and system architecture. Section~VII covers training and inference procedures. Section~VIII describes the software system design and web visualization. Section~IX reports evaluation results. Section~X analyzes challenges and failure modes. Section~XI discusses safety and regulatory considerations. Section~XII provides discussion and interpretation. Section~XIII states limitations. Section~XIV outlines future work. Section~XV concludes the paper.

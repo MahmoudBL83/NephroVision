@@ -1,0 +1,115 @@
+\section{Safety and Regulatory Considerations}
+
+This section documents the safety and regulatory framework for NephroVision. The system is an academic prototype developed within a graduation project context. All regulatory claims are framed within this scope, and no statement in this section should be interpreted as evidence of clinical approval or regulatory clearance.
+
+\subsection{Software as a Medical Device Academic Prototype}
+
+NephroVision is classified as Software as a Medical Device (SaMD) under the International Medical Device Regulators Forum (IMDRF) framework \cite{imdrf_samd}, given its intended use for medical image analysis that could influence clinical decision-making. However, this classification refers to the intended use of the system, not its regulatory status. The system is an academic prototype and has not undergone regulatory review, approval, or certification by any competent authority.
+
+The development process follows software lifecycle principles consistent with IEC 62304 \cite{iec62304} to the extent feasible within an academic project timeline. Full compliance with IEC 62304, including mandatory documentation, traceability, and verification activities, is identified as future work.
+
+\subsection{IEC 62304 Class B Safety Positioning}
+
+IEC 62304 classifies medical device software into three safety classes based on the severity of potential harm to patients \cite{iec62304}:
+
+\begin{itemize}
+    \item \textbf{Class A:} No injury or damage to health is possible.
+    \item \textbf{Class B:} Non-serious injury is possible.
+    \item \textbf{Class C:} Death or serious injury is possible.
+\end{itemize}
+
+NephroVision is positioned as IEC 62304 Software Safety Class B. This classification is appropriate because:
+
+\begin{itemize}
+    \item The system produces segmentation masks and volumetric statistics that are intended to \textbf{support} physician review, not to replace physician judgment.
+    \item All outputs require \textbf{physician oversight} before any clinical application, ensuring that errors in segmentation (false positives, false negatives, boundary inaccuracies) are identified by a qualified professional before influencing patient management.
+    \item The system does not make \textbf{autonomous decisions}. It performs anatomical delineation, not diagnosis. The clinical interpretation of results remains the responsibility of the physician.
+    \item The most probable harm from incorrect segmentation (missed tumor boundary, incorrect volume estimate) is non-serious when detected during physician review. Serious harm would require both system error and unchecked reliance on automated output, which is prevented by the mandatory physician review workflow.
+\end{itemize}
+
+Class B is therefore the appropriate risk category for a decision-support segmentation system with mandatory physician oversight. A Class C classification would be appropriate only if the system were making autonomous diagnostic or therapeutic decisions without human review.
+
+\subsection{Intended Users}
+
+NephroVision is designed for use by the following qualified healthcare professionals:
+
+\begin{itemize}
+    \item \textbf{Radiologists:} For reviewing segmentation results, assessing boundary accuracy, and incorporating volumetric statistics into diagnostic interpretation.
+    \item \textbf{Urologists:} For reviewing anatomical delineation relevant to surgical planning and treatment assessment.
+    \item \textbf{Medical engineers:} For technical evaluation and system-level understanding of the segmentation pipeline.
+\end{itemize}
+
+The system is not intended for use by patients, non-medical personnel, or healthcare professionals without training in medical image interpretation.
+
+\subsection{Intended Use}
+
+The intended use of NephroVision is to support kidney and renal tumor/cyst segmentation and volumetric quantification from contrast-enhanced abdominal CT volumes. Specifically, the system:
+
+\begin{itemize}
+    \item Accepts NIfTI CT volumes as input.
+    \item Produces a three-class segmentation mask (background, kidney, tumor/cyst).
+    \item Computes kidney and tumor volumetric statistics.
+    \item Provides interactive 3D visualization for physician review.
+\end{itemize}
+
+The system is intended for decision-support use and is not a standalone diagnostic device. All outputs require interpretation by a qualified physician in conjunction with clinical history, patient symptoms, laboratory data, and other diagnostic information.
+
+\subsection{Safety Constraints}
+
+The following safety constraints govern the use of NephroVision:
+
+\begin{itemize}
+    \item \textbf{Not a standalone diagnostic device:} Segmentation outputs and volumetric statistics are for physician review only. They do not constitute a diagnosis.
+    \item \textbf{Not for autonomous decisions:} The system does not make clinical decisions. It performs anatomical delineation and quantification. All clinical decisions remain the responsibility of the qualified physician.
+    \item \textbf{Physician review required:} All segmentation results must be verified by a qualified physician before influencing patient care. This requirement is documented in the system interface and in the intended-use statement (Section~XI-D).
+    \item \textbf{Known limitations documented:} The system has known limitations including moderate tumor boundary precision (Dice $0.6558 \pm 0.262$), merged tumor/cyst class, no external validation, and academic prototype status. These limitations are documented throughout this paper.
+    \item \textbf{No emergency use:} The system is not intended for use in emergency or time-critical clinical situations.
+    \item \textbf{No pediatric use:} The system has not been evaluated on pediatric populations and is not intended for pediatric use.
+\end{itemize}
+
+\subsection{Risk Mitigations}
+
+The following mitigations are implemented to address identified risks:
+
+\begin{itemize}
+    \item \textbf{Disclaimers:} Explicit disclaimers are displayed in the web interface stating that NephroVision is an academic prototype for decision-support use and is not clinically approved.
+    \item \textbf{Visual output review:} Segmentation results are presented through an interactive 3D viewer that enables detailed visual inspection of boundaries. The system does not make automated decisions based on segmentation outputs.
+    \item \textbf{Documented limitations:} All known limitations are documented in this paper and in the system interface, ensuring that users are aware of performance boundaries and accuracy constraints.
+    \item \textbf{Post-processing:} Conservative post-processing thresholds reduce false positives while preserving small lesions. The tumor blob removal threshold of 100 voxels is deliberately conservative to minimize false negatives.
+    \item \textbf{Human-in-the-loop workflow:} The system is designed as a physician-review tool, not an automated decision-maker. Every output requires physician verification before any clinical application.
+\end{itemize}
+
+\input{tables/risk_mitigation_summary.tex}
+
+Table~\ref{tab:risk_mitigation} summarizes the known risks and their corresponding mitigation strategies.
+
+\subsection{Regulatory Limits}
+
+NephroVision operates within explicit regulatory boundaries:
+
+\begin{itemize}
+    \item \textbf{Academic prototype:} The system is developed within a graduation project context and is not intended for commercial distribution.
+    \item \textbf{Not clinically approved:} No clinical approval has been obtained from any regulatory authority.
+    \item \textbf{Not FDA approved:} The system has not been submitted to the U.S. Food and Drug Administration (FDA) for 510(k) clearance, De Novo classification, or Pre-Market Approval (PMA).
+    \item \textbf{Not CE marked:} The system has not undergone conformity assessment under the European Medical Device Regulation (MDR) or In Vitro Diagnostic Regulation (IVDR).
+    \item \textbf{No regulatory submission:} No submission to any regulatory authority has been made. The system is an academic research prototype, not a commercial medical device.
+    \item \textbf{No prospective clinical trial:} The system has been evaluated on retrospective KiTS23 dataset cases only. No prospective clinical trial or clinical investigation has been conducted.
+\end{itemize}
+
+These limits are not gaps to be hidden but intentional boundaries of the project scope. The transition from academic prototype to regulated medical device would require additional activities identified in the following subsection.
+
+\subsection{Future Regulatory Work}
+
+The following activities are identified as necessary steps toward regulatory compliance and clinical deployment. None of these activities have been completed or initiated:
+
+\begin{itemize}
+    \item \textbf{Clinical validation:} Multi-center, multi-vendor external validation on diverse patient populations and scanner protocols. Establishing a clinical validation protocol with defined acceptance criteria.
+    \item \textbf{Cybersecurity documentation:} Formal cybersecurity assessment following IEC 81001-5-1 or AAMI TIR57, including threat modeling, penetration testing, and security risk management.
+    \item \textbf{Usability testing:} Formative and summative usability evaluation with representative users (radiologists, urologists) following IEC 62366 to identify use errors and improve interface safety.
+    \item \textbf{Post-market surveillance planning:} Development of a post-market surveillance (PMS) plan consistent with applicable regulatory requirements, including monitoring of adverse events and performance trends.
+    \item \textbf{ISO 14971 risk management:} Preparation of a comprehensive risk management file following ISO 14971, including risk analysis, risk evaluation, risk control, and residual risk acceptance for all identified hazards.
+    \item \textbf{Software lifecycle documentation:} Complete software development plan, requirements specification, architecture description, traceability matrix, verification and validation reports, and software maintenance plan consistent with IEC 62304.
+    \item \textbf{Quality management system:} Establishment of a quality management system (QMS) compliant with ISO 13485 for design control, document management, and corrective actions.
+\end{itemize}
+
+These activities are identified as future work and are not within the scope of the current academic prototype. Their completion would be required before any clinical deployment or regulatory submission.

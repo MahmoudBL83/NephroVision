@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .step-num { font-size: 14px; font-weight: 700; fill: #1e3a5f; text-anchor: middle; }
+      .step-text { font-size: 10px; font-weight: 600; fill: #1a1a1a; text-anchor: middle; }
+      .step-desc { font-size: 9px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .step-date { font-size: 8px; font-weight: 500; fill: #1e3a5f; text-anchor: middle; opacity: 0.8; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">Development Timeline</text>
+  <text x="480" y="82" class="subtitle">10-phase iterative process · Oct 2025 — Jun 2026</text>
+
+  <!-- Main timeline line -->
+  <line x1="100" y1="280" x2="860" y2="280" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Timeline nodes -->
+  <g filter="url(#shadow)">
+    <!-- Node 1 -->
+    <circle cx="140" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="140" y="285" class="step-num" style="fill: #ffffff;">1</text>
+    <rect x="95" y="200" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="140" y="225" class="step-text">Problem</text>
+    <text x="140" y="242" class="step-desc">Understanding</text>
+    <text x="140" y="180" class="step-date">Oct 2025</text>
+
+    <!-- Node 2 -->
+    <circle cx="240" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="240" y="285" class="step-num" style="fill: #ffffff;">2</text>
+    <rect x="195" y="310" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="240" y="335" class="step-text">Dataset</text>
+    <text x="240" y="352" class="step-desc">Exploration</text>
+    <text x="240" y="385" class="step-date">Nov 2025</text>
+
+    <!-- Node 3 -->
+    <circle cx="340" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="340" y="285" class="step-num" style="fill: #ffffff;">3</text>
+    <rect x="295" y="200" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="340" y="225" class="step-text">Preprocess</text>
+    <text x="340" y="242" class="step-desc">HU + Norm</text>
+    <text x="340" y="180" class="step-date">Nov-Dec 2025</text>
+
+    <!-- Node 4 -->
+    <circle cx="440" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="440" y="285" class="step-num" style="fill: #ffffff;">4</text>
+    <rect x="395" y="310" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="440" y="335" class="step-text">Model</text>
+    <text x="440" y="352" class="step-desc">3D U-Net</text>
+    <text x="440" y="385" class="step-date">Dec 2025</text>
+
+    <!-- Node 5 -->
+    <circle cx="540" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="540" y="285" class="step-num" style="fill: #ffffff;">5</text>
+    <rect x="495" y="200" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="540" y="225" class="step-text">Inference</text>
+    <text x="540" y="242" class="step-desc">Sliding + TTA</text>
+    <text x="540" y="180" class="step-date">Mar 2026</text>
+
+    <!-- Node 6 -->
+    <circle cx="640" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="640" y="285" class="step-num" style="fill: #ffffff;">6</text>
+    <rect x="595" y="310" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="640" y="335" class="step-text">Post-Process</text>
+    <text x="640" y="352" class="step-desc">Blob Filter</text>
+    <text x="640" y="385" class="step-date">Mar 2026</text>
+
+    <!-- Node 7 -->
+    <circle cx="740" cy="280" r="14" fill="#1e3a5f"/>
+    <text x="740" y="285" class="step-num" style="fill: #ffffff;">7</text>
+    <rect x="695" y="200" width="90" height="55" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="740" y="225" class="step-text">Web App</text>
+    <text x="740" y="242" class="step-desc">3D Viewer</text>
+    <text x="740" y="180" class="step-date">Apr 2026</text>
+
+    <!-- Node 8 -->
+    <circle cx="820" cy="280" r="18" fill="#2d6a4f"/>
+    <text x="820" y="286" class="step-num" style="fill: #ffffff; font-size: 16px;">8</text>
+    <rect x="775" y="310" width="90" height="55" rx="8" fill="#f0f7f4" stroke="#2d6a4f" stroke-width="1.5"/>
+    <text x="820" y="335" class="step-text" style="fill: #2d6a4f;">Validation</text>
+    <text x="820" y="352" class="step-desc" style="fill: #2d6a4f;">64-case Test</text>
+    <text x="820" y="385" class="step-date" style="fill: #2d6a4f;">May 2026</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="480" y="440" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Safety documentation (Phase 9) integrated throughout · Experiment log maintained at each phase</text>
+</svg>

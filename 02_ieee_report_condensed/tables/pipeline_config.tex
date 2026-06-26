@@ -1,0 +1,26 @@
+\begin{table}[!t]
+\caption{System Configuration}
+\label{tab:pipeline_config}
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Property} & \textbf{Value} \\
+\midrule
+Dataset & KiTS23 (2023) \\
+Input format & NIfTI CT volumes \\
+Classes & Background, Kidney, Tumor/Cyst \\
+Test set & 64 held-out cases \\
+\midrule
+HU clipping & $[-200, 300]$ \\
+Normalization & $[0, 1]$ (min--max) \\
+\midrule
+Model & 3D U-Net \\
+Inference window & $64 \times 192 \times 192$ \\
+Overlap & $50\%$ \\
+TTA & 8 flip combinations \\
+\midrule
+Kidney blob threshold & $< 5000$ voxels \\
+Tumor blob threshold & $< 100$ voxels \\
+\bottomrule
+\end{tabular}
+\end{table}

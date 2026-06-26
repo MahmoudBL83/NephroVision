@@ -1,0 +1,55 @@
+\section{Limitations}
+
+This section documents the known limitations of NephroVision. Each limitation is stated clearly with an explanation of its impact and, where applicable, a planned mitigation or path forward. Acknowledging these boundaries is essential for appropriate use, safety, and scientific integrity. The limitations do not negate the project's contributions but define the scope within which the results should be interpreted.
+
+\subsection{Analytical Dataset Validation Only}
+
+All evaluation results are based on analytical validation using the KiTS23 dataset. The system has been tested on retrospective CT volumes with existing expert annotations, not on prospectively acquired data in a clinical workflow. Analytical validation measures technical performance under controlled conditions, but it does not predict clinical performance, workflow integration, or user acceptance. Prospective validation with real clinical cases is identified as future work.
+
+\subsection{No Prospective Clinical Trial}
+
+No clinical trial has been conducted. The system has not been tested with physician reviewers in a diagnostic setting, and its effect on radiologist interpretation time, measurement consistency, or diagnostic confidence has not been measured. A formal clinical investigation would be required to assess the system's impact on clinical decision-making and patient outcomes before any clinical deployment.
+
+\subsection{No External Hospital Validation}
+
+The system is evaluated exclusively on the KiTS23 dataset, which is a publicly available challenge dataset. Performance on CT volumes from other hospitals, scanner manufacturers, acquisition protocols, or patient demographics is unknown. Domain shift is a well-documented challenge in medical imaging AI, and external validation on multi-center, multi-vendor data is required before any claim of generalizability to new clinical settings.
+
+\subsection{Possible Domain Shift Outside KiTS23}
+
+KiTS23 cases were collected from a limited set of clinical centers with specific scanner protocols and patient demographics. The model's performance may degrade on data from institutions, scanners, or populations not represented in the training distribution. This domain shift risk is inherent to all medical AI systems trained on fixed datasets and motivates the need for external validation as the highest-priority future work.
+
+\subsection{Tumor/Cyst Boundary Segmentation Remains Challenging}
+
+Tumor Dice of $0.6558 \pm 0.262$ and tumor HD95 of $67.35$ mm indicate that boundary precision is moderate and variable across cases. Small lesions, infiltrative tumors, and low-contrast interfaces are particularly challenging. This limitation is inherent to the segmentation task and is not unique to NephroVision---it reflects the difficulty of delineating renal masses on single-phase contrast-enhanced CT without additional imaging modalities.
+
+Mitigations include conservative post-processing thresholds that preserve small lesions, reporting of HD95 alongside Dice to capture boundary accuracy, and explicit documentation of this limitation in all outputs. Future work includes boundary-aware loss functions, uncertainty estimation, and integration of multiphase CT information.
+
+\subsection{Tumor Dice Is Lower Than Kidney Dice}
+
+The mean tumor Dice ($0.6558$) is substantially lower than kidney Dice ($0.9307$), and the standard deviation is larger ($0.262$ vs. $0.064$). This gap is expected given the different characteristics of the two classes: kidney tissue has consistent morphology, clear CT boundaries, and large spatial extent, while tumors vary widely in size, shape, appearance, and boundary clarity. Users should not expect tumor segmentation performance to match kidney segmentation performance, and this asymmetry is documented explicitly in the system interface.
+
+\subsection{HD95 May Be Affected by Outliers}
+
+The 95th percentile Hausdorff Distance, while more robust than the maximum Hausdorff Distance, can still be influenced by a small number of outlier cases with poor boundary agreement. The reported mean HD95 values ($19.98$ mm for kidney, $67.35$ mm for tumor) should be interpreted alongside the standard deviation of Dice and the per-case analysis in the experiment log to understand the distribution of boundary performance across the test set.
+
+\subsection{Regulatory Documentation Is Academic, Not Formal Clearance}
+
+The safety and regulatory documentation in this paper follows IEC 62304 principles to the extent feasible within an academic project, but it does not constitute formal regulatory submission or clearance. No submission has been made to the FDA, notified body, or any regulatory authority. 
+
+Mitigations include clear intended-use statements, explicit disclaimers in all outputs, and documentation of known regulatory gaps (Section~XI). The system is not intended for clinical deployment without additional regulatory work.
+
+\subsection{Cybersecurity Documentation Is Not Complete for Real Deployment}
+
+Cybersecurity hardening has not been formally assessed. Threat modeling, penetration testing, encryption verification, and compliance with standards such as IEC 81001-5-1 or AAMI TIR57 have not been performed. The web application transmits data over HTTP by default, and uploaded file retention policies depend on deployment configuration.
+
+Mitigations include acknowledging this gap as future work and designing the system as a local-processing prototype where possible. Any clinical deployment would require comprehensive cybersecurity assessment before use.
+
+\subsection{Some Training Details May Require Completion}
+
+Some hyperparameters---including the exact loss function, optimizer configuration, learning rate schedule, and batch size---are marked as TODO in the experiment log (\texttt{experiment\_log.md}) and model training documentation (\texttt{model\_training\_documentation.md}). These values will be completed by the team with actual data before final submission. The documented inference configuration (sliding-window size, TTA, post-processing thresholds) and final evaluation results are complete and verified.
+
+\subsection{Web Application Is Prototype-Level}
+
+The web visualization interface is a functional prototype designed for demonstration and review within the academic project context. It has not undergone formal usability testing with clinicians, does not support multi-user access or authentication, and has not been optimized for production deployment. 
+
+Mitigations include clear labeling of the system as an academic prototype in the interface, documentation of prototype limitations, and identification of usability evaluation as future work. The system is not intended for clinical use in its current form.

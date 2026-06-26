@@ -1,0 +1,27 @@
+% Table: Dataset and Configuration
+% Used in: 05_dataset_exploration.tex, 10_evaluation_results.tex
+% All values are verified project facts from MASTER_CONTEXT.md.
+
+\begin{table}[!t]
+\caption{Dataset and System Configuration}
+\label{tab:dataset_config}
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Property} & \textbf{Value} \\
+\midrule
+Dataset & KiTS23 (Kidney Tumor Segmentation Challenge 2023) \\
+Input format & NIfTI CT volumes (\texttt{.nii} / \texttt{.nii.gz}) \\
+Classes & Background, Kidney, Tumor/Cyst \\
+Test set & 64 independent held-out cases \\
+\midrule
+HU clipping range & $[-200, 300]$ \\
+Normalization & $[0, 1]$ (min--max) \\
+\midrule
+Model architecture & 3D U-Net \\
+Inference window & $64 \times 192 \times 192$ voxels \\
+Overlap & $50\%$ \\
+Test-time augmentation (TTA) & 8 flip combinations \\
+\bottomrule
+\end{tabular}
+\end{table}

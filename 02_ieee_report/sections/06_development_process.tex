@@ -1,0 +1,161 @@
+\section{Development Process and Experimental Documentation}
+
+This section documents the engineering workflow from problem definition to final prototype, directly addressing the mid-year evaluation feedback requesting thorough documentation of what the team did, how the model was trained, and what difficulties were encountered.
+
+\subsection{Development Workflow Overview}
+
+The development of NephroVision followed a structured workflow comprising ten phases:
+
+\begin{enumerate}
+    \item \textbf{Problem understanding and clinical motivation:} Review of renal segmentation clinical needs and definition of scope as a decision-support system.
+    \item \textbf{Dataset exploration:} Analysis of KiTS23 dataset characteristics, class distributions, and annotation conventions.
+    \item \textbf{Preprocessing pipeline design:} Development of HU clipping, normalization, and validation procedures.
+    \item \textbf{Baseline 3D U-Net implementation:} Architecture selection and initial model setup for volumetric segmentation.
+    \item \textbf{Training and validation iterations:} Multiple training runs with varying hyperparameters and augmentation strategies.
+    \item \textbf{Inference pipeline development:} Implementation of sliding-window inference with test-time augmentation.
+    \item \textbf{Post-processing improvements:} Connected-component filtering to reduce false positives.
+    \item \textbf{Web application and 3D visualization:} Browser-based interface for segmentation display and volumetric reporting.
+    \item \textbf{Safety documentation:} IEC 62304 Class B classification and intended-use statement.
+    \item \textbf{Final validation and defense preparation:} Evaluation on 64 held-out test cases and preparation of defense materials.
+\end{enumerate}
+
+Each phase involved iterative experimentation, with decisions documented in the project experiment log and engineering decision records.
+
+\subsection{Post-Mid-Year Documentation Improvement}
+
+Following the mid-year evaluation, the team received feedback that the project work should be documented more thoroughly. The feedback emphasized that the final documentation must show the development process, not only the final results.
+
+In response, the team implemented comprehensive documentation practices covering:
+\begin{itemize}
+    \item Dataset preparation procedures and exploration findings
+    \item Preprocessing decisions with empirical justification
+    \item Model training setup with hyperparameter tracking
+    \item Experiment iterations with observations and decisions
+    \item Inference and post-processing design choices
+    \item Challenges encountered during development
+    \item Cyst/tumor segmentation difficulties
+    \item Failure modes and mitigation strategies
+    \item Limitations and future work
+\end{itemize}
+
+This documentation layer was added to ensure the final submission explains not only the final performance, but also the engineering decisions and difficulties encountered.
+
+\subsection{Dataset Preparation and Exploration}
+
+The project utilized the KiTS23 (Kidney Tumor Segmentation Challenge 2023) dataset, which provides contrast-enhanced CT volumes with expert annotations for three classes: background, kidney, and tumor/cyst. The dataset includes cases with varying tumor sizes, locations, and morphological characteristics.
+
+Key dataset characteristics include:
+\begin{itemize}
+    \item \textbf{Classes:} Background, Kidney, Tumor/Cyst (tumor and cyst merged into a single foreground class per challenge convention)
+    \item \textbf{Input format:} NIfTI volumes (.nii / .nii.gz)
+    \item \textbf{Test set:} 64 independent held-out cases reserved for final evaluation
+\end{itemize}
+
+Dataset exploration revealed significant variability in kidney size, tumor morphology, and CT acquisition parameters. Tumors ranged from small lesions occupying fewer than 100 voxels to large masses exceeding 10,000 voxels. This size variability, combined with boundary ambiguity and heterogeneous appearance, presented a central challenge throughout development.
+
+\subsection{Preprocessing Design Decisions}
+
+The preprocessing pipeline was designed to standardize CT volumes while preserving diagnostic information relevant to kidney and tumor segmentation.
+
+\textbf{HU Clipping:} CT intensities were clipped to the range $[-200, 300]$ Hounsfield Units. This range was selected to focus on soft-tissue contrast relevant to kidney and tumor while suppressing bone, air, and other irrelevant structures. The clipping range was determined through empirical evaluation of multiple ranges, with $[-200, 300]$ providing the best balance between tissue contrast and noise suppression.
+
+\textbf{Normalization:} Clipped intensities were linearly normalized to the range $[0, 1]$ using min-max scaling. This standardization enabled consistent input to the neural network regardless of scanner-specific intensity variations.
+
+\textbf{Validation:} Each NIfTI volume was validated for correct orientation, spacing metadata, and label consistency before processing. Volumes with missing or inconsistent metadata were flagged for manual review.
+
+The preprocessing pipeline was applied identically to training, validation, and inference to ensure consistency across all stages.
+
+\subsection{Baseline 3D U-Net Implementation}
+
+The segmentation model was implemented as a 3D U-Net architecture, selected for its proven effectiveness in volumetric medical image segmentation tasks. The 3D U-Net processes volumetric patches and produces per-voxel class predictions for the three target classes.
+
+Key architectural decisions included:
+\begin{itemize}
+    \item \textbf{Volumetric processing:} 3D convolutions to capture spatial context across slices, avoiding the limitations of 2D slice-by-slice approaches.
+    \item \textbf{Encoder-decoder structure:} Downsampling path for context extraction and upsampling path for precise localization, with skip connections to preserve fine details.
+    \item \textbf{Three-class output:} Background, Kidney, and Tumor/Cyst predictions.
+\end{itemize}
+
+The model was implemented using standard deep learning frameworks. The exact architecture depth, number of feature channels, and normalization layers are documented in the model training documentation.
+
+\subsection{Training and Validation Iteration Documentation}
+
+Model training involved multiple iterations to identify effective hyperparameters and training strategies. Each training run was documented in the experiment log with the following information:
+
+\begin{itemize}
+    \item Experiment ID and date
+    \item Dataset split (training, validation, test)
+    \item Preprocessing configuration
+    \item Model architecture details
+    \item Loss function, optimizer, and learning rate
+    \item Batch size and number of epochs
+    \item Data augmentation strategy
+    \item Validation metrics achieved
+    \item Observations and problems encountered
+    \item Decision after experiment (adopt, modify, or discard)
+\end{itemize}
+
+Training experiments explored various loss functions, optimizers, learning rate schedules, and augmentation strategies. The exact optimizer settings, learning rate schedule, and batch size are documented in the experiment log. Training was conducted on GPU hardware with sufficient memory to support 3D volumetric processing.
+
+Validation was performed on a held-out validation set separate from the 64-case test set. Metrics tracked during training included Dice score per class, Hausdorff Distance (HD95), and tumor detection rate. Checkpoint selection was based on validation performance, with the best-performing model retained for final evaluation.
+
+\subsection{Inference Refinement}
+
+The inference pipeline was designed to process full CT volumes that exceed GPU memory capacity. The final inference configuration included:
+
+\textbf{Sliding-Window Inference:} Full volumes were processed using a sliding window with patch size $64 \times 192 \times 192$ voxels and 50\% overlap between adjacent patches. This approach enabled processing of arbitrarily large volumes while maintaining spatial context within each patch.
+
+\textbf{Test-Time Augmentation (TTA):} Each volume was processed with 8 flip combinations (flips along x, y, and z axes). Predictions from all augmented versions were averaged to reduce boundary noise and improve robustness. TTA increased inference time but provided measurable improvements in segmentation consistency.
+
+\textbf{Patch Fusion:} Overlapping predictions from adjacent patches were combined using averaging in the overlap regions. This fusion strategy minimized stitching artifacts at patch boundaries.
+
+The inference pipeline was validated on the training and validation sets before application to the held-out test set. Inference time and memory usage were monitored to ensure practical feasibility.
+
+\subsection{Post-Processing}
+
+Post-processing was applied to raw model predictions to reduce false positives and produce cleaner segmentation masks.
+
+\textbf{Connected-Component Filtering:} Connected-component analysis was performed on the predicted kidney and tumor/cyst masks separately. Small connected components were removed based on voxel count thresholds:
+\begin{itemize}
+    \item Kidney blobs with fewer than 5000 voxels were removed
+    \item Tumor/cyst blobs with fewer than 100 voxels were removed
+\end{itemize}
+
+These thresholds were selected through empirical evaluation on the validation set. The kidney threshold of 5000 voxels removed spurious predictions in non-renal regions while preserving true kidney structures. The tumor threshold of 100 voxels removed noise while preserving small true lesions.
+
+The conservative tumor threshold was chosen to avoid removing small true tumors, even at the cost of retaining some false positives. This decision prioritized detection sensitivity over precision, consistent with the decision-support role of the system.
+
+\textbf{Volume and Statistics Preparation:} Post-processed segmentation masks were used to compute volumetric statistics including kidney volume, tumor/cyst volume, and tumor detection status. These statistics were formatted for display in the web visualization interface.
+
+\subsection{Web Visualization Integration}
+
+A browser-based web application was developed to provide interactive 3D visualization of segmentation results and volumetric statistics. The web interface enables physicians to:
+
+\begin{itemize}
+    \item View 3D mesh renderings of kidney and tumor/cyst segmentations
+    \item Inspect volumetric statistics (kidney volume, tumor volume, detection status)
+    \item Rotate, zoom, and pan the 3D visualization for detailed inspection
+    \item Access segmentation results without requiring specialized medical imaging software
+\end{itemize}
+
+The web application was implemented using standard web technologies and integrates with the segmentation pipeline to provide end-to-end processing from CT volume upload to visualization display. The interface is designed for decision-support use, with all outputs requiring physician review before clinical application.
+
+\subsection{Documentation Artifacts Created}
+
+To support reproducibility and defense transparency, the following documentation artifacts were maintained throughout development:
+
+\begin{itemize}
+    \item \textbf{development\_timeline.md:} Chronological record of all project phases and milestones
+    \item \textbf{experiment\_log.md:} Detailed record of all training and inference experiments with hyperparameters, results, and decisions
+    \item \textbf{model\_training\_documentation.md:} Hardware, software, data splits, hyperparameters, and training procedures
+    \item \textbf{challenges\_and\_solutions.md:} Documentation of engineering difficulties encountered and mitigations applied
+    \item \textbf{cyst\_and\_tumor\_detection\_challenges.md:} Technical explanation of why tumor/cyst segmentation is more difficult than kidney segmentation
+    \item \textbf{failure\_cases\_analysis.md:} Analysis of segmentation failures with root cause hypotheses and corrective actions
+    \item \textbf{reproducibility\_notes.md:} Environment specifications, random seeds, commands, and checkpoint information
+\end{itemize}
+
+All documentation artifacts are cross-referenced to ensure consistency. Metrics reported in this paper match those in the experiment log and known metrics documentation. No undocumented experiment is presented as completed work.
+
+This documentation framework ensures that the development process is transparent, reproducible, and defensible. The experiment log and supporting documents are available for review by the defense committee.
+
+\input{tables/tab_dev_artifacts.tex}

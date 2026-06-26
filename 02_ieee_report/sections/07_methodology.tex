@@ -1,0 +1,140 @@
+\section{Methodology}
+
+This section presents the NephroVision segmentation pipeline, describing each stage from input preprocessing to final visualization output. The pipeline is designed to process full contrast-enhanced CT volumes and produce per-voxel segmentation masks, volumetric statistics, and an interactive 3D rendering.
+
+\subsection{System Overview}
+
+NephroVision implements an end-to-end pipeline for automated kidney and renal tumor/cyst segmentation, illustrated in Figure~\ref{fig:pipeline}. A NIfTI CT volume enters the system and undergoes preprocessing (Hounsfield-unit clipping and min--max normalization). The preprocessed volume is segmented by a 3D U-Net \cite{unet3d} using sliding-window inference with test-time augmentation. Raw model predictions are refined through connected-component post-processing to remove spurious detections. The final output includes a 3D segmentation mask, kidney and tumor volumetric statistics, and an interactive browser-based 3D visualization for physician review.
+
+\begin{figure}[!t]
+\centering
+% TODO: Replace with actual figure: fig_pipeline.pdf
+% \includegraphics[width=\linewidth]{figures/fig_pipeline.pdf}
+\fbox{\parbox{0.8\linewidth}{\centering\vspace{2cm}\textbf{[Placeholder]}\\System Pipeline Diagram\\\small NIfTI Input $\rightarrow$ Preprocessing $\rightarrow$ 3D U-Net $\rightarrow$ Sliding-Window Inference $\rightarrow$ Post-processing $\rightarrow$ 3D Visualization\vspace{2cm}}}
+\caption{Overview of the NephroVision segmentation pipeline. A NIfTI CT volume is preprocessed, segmented by a 3D U-Net with sliding-window inference and test-time augmentation, post-processed to remove small false-positive blobs, and visualized through a browser-based interface.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Preprocessing Pipeline}
+
+All CT volumes undergo identical preprocessing before training and inference to ensure consistent input distributions. The preprocessing pipeline comprises three steps:
+
+\begin{enumerate}
+    \item \textbf{NIfTI loading and validation:} Each CT volume is loaded using SimpleITK or NiBabel. Metadata including dimensions, voxel spacing, and orientation are validated. Volumes with corrupted data or inconsistent metadata are excluded.
+    
+    \item \textbf{Hounsfield-unit clipping:} Raw CT intensity values, expressed in Hounsfield Units (HU), are clipped to the range $[-200, 300]$. This range was selected empirically to preserve soft-tissue contrast relevant to kidney and tumor visualization while suppressing values corresponding to bone ($> 300$ HU), air ($< -1000$ HU), and contrast bolus. The clipped range captures renal parenchyma, tumor enhancement, and surrounding soft tissue.
+    
+    \item \textbf{Min--max normalization:} Clipped intensities are linearly rescaled to $[0, 1]$ using:
+    \begin{equation}
+    x_{\text{norm}} = \frac{x - x_{\text{min}}}{x_{\text{max}} - x_{\text{min}}} = \frac{x - (-200)}{300 - (-200)} = \frac{x + 200}{500}
+    \end{equation}
+    This normalization improves numerical stability during training and ensures consistent input intensity distributions across different CT scanners and acquisition protocols.
+\end{enumerate}
+
+The preprocessing pipeline is deterministic and reproducible. Identical preprocessing is applied during training, validation, and inference to eliminate distribution mismatch between development and deployment stages.
+
+\subsection{Label Mapping}
+
+The segmentation task operates on three output classes, corresponding to the KiTS23 annotation convention \cite{kits23}:
+
+\begin{itemize}
+    \item \textbf{Background} (label 0): All voxels outside the kidney and tumor/cyst regions, including surrounding organs, bone, fat, and air.
+    \item \textbf{Kidney} (label 1): Renal parenchyma including cortex, medulla, and collecting system.
+    \item \textbf{Tumor/Cyst} (label 2): Renal masses including solid tumors, simple cysts, and complex cystic lesions, merged into a single foreground class per challenge convention.
+\end{itemize}
+
+The tumor/cyst class merges pathologically distinct entities into one label. This convention follows the KiTS23 challenge definition and reflects the clinical difficulty of distinguishing tumor tissue from cysts on single-phase contrast-enhanced CT without additional imaging modalities or multiphase acquisition.
+
+\subsection{3D U-Net Segmentation Model}
+
+The core segmentation model is a 3D U-Net architecture \cite{unet3d}, selected for its demonstrated effectiveness in volumetric biomedical image segmentation. The 3D U-Net extends the original 2D U-Net \cite{unet} by replacing 2D convolutions with 3D convolutions, enabling direct processing of volumetric data without slice-by-slice decomposition.
+
+The architecture follows an encoder-decoder structure with skip connections:
+
+\begin{itemize}
+    \item \textbf{Encoder (contracting path):} A series of 3D convolutional blocks with downsampling operations progressively reduces spatial resolution while increasing feature channel depth. Each encoder stage captures hierarchical volumetric features, from local texture patterns to global anatomical context.
+    \item \textbf{Bottleneck:} The deepest layer of the network, operating at the most compressed spatial resolution, captures long-range dependencies across the full receptive field.
+    \item \textbf{Decoder (expansive path):} A series of upsampling operations with 3D convolutional blocks restores spatial resolution to the original input dimensions. Skip connections from encoder stages are concatenated with decoder features, preserving fine spatial details that are otherwise lost during downsampling.
+    \item \textbf{Output layer:} A $1 \times 1 \times 1$ convolution reduces the feature channels to the number of output classes (3), followed by softmax activation to produce per-voxel class probabilities.
+\end{itemize}
+
+% TODO: Fill exact architecture details from model_training_documentation.md:
+% - Number of downsampling stages (encoder depth): TODO
+% - Base feature channels at first encoder stage: TODO
+% - Normalization layer type (BatchNorm / InstanceNorm): TODO
+% - Activation function: TODO
+% - Total trainable parameters: TODO
+
+The architecture is illustrated in Figure~\ref{fig:architecture}. The choice of 3D convolutions over 2D slice-by-slice processing is motivated by the need to capture inter-slice spatial context, which is essential for structures such as the kidney that exhibit complex three-dimensional morphology.
+
+\begin{figure}[!t]
+\centering
+% TODO: Replace with actual figure: fig_architecture.pdf
+% \includegraphics[width=0.9\linewidth]{figures/fig_architecture.pdf}
+\fbox{\parbox{0.7\linewidth}{\centering\vspace{2cm}\textbf{[Placeholder]}\\3D U-Net Architecture Diagram\\\small Encoder (downsampling) $\rightarrow$ Bottleneck $\rightarrow$ Decoder (upsampling) with skip connections\vspace{2cm}}}
+\caption{3D U-Net architecture used for volumetric semantic segmentation. The encoder extracts hierarchical volumetric features, the bottleneck captures the most compressed representation, and the decoder upsamples back to full resolution with skip connections preserving spatial detail.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Sliding-Window Inference}
+
+Full CT volumes typically contain hundreds of slices and exceed GPU memory capacity when loaded in their entirety. To enable inference on complete volumes, NephroVision employs a sliding-window strategy:
+
+\begin{itemize}
+    \item \textbf{Patch size:} $64 \times 192 \times 192$ voxels. This patch size was selected to balance spatial context with GPU memory constraints, enabling processing on consumer-grade hardware.
+    \item \textbf{Overlap:} 50\% between adjacent patches in all three spatial dimensions. Overlap ensures that voxels near patch boundaries are predicted from multiple overlapping contexts, reducing boundary artifacts.
+    \item \textbf{Patch fusion:} Predictions from overlapping patches are combined using averaging in the overlap regions. For a voxel covered by $n$ overlapping patches, the final class probability is the mean of the $n$ predictions. This Gaussian-like weighting scheme (center-weighted due to averaging of equally-spaced patches) produces smooth transitions across patch boundaries.
+\end{itemize}
+
+The sliding-window traversal covers the entire volume, and the fused prediction map is assembled into a full-resolution segmentation mask matching the input volume dimensions.
+
+\subsection{Test-Time Augmentation}
+
+Test-time augmentation (TTA) is applied during inference to improve segmentation robustness and reduce prediction noise. For each input volume, 8 augmented versions are generated by applying all combinations of flips along the three spatial axes ($2^3 = 8$):
+
+\begin{itemize}
+    \item \textbf{Flip axes:} The three orthogonal spatial axes (sagittal, coronal, axial) are independently flipped, producing 8 unique views of the same anatomy.
+    \item \textbf{Inference:} Each augmented volume is processed independently through the sliding-window pipeline.
+    \item \textbf{Averaging:} The resulting class probability maps are un-flipped (inverse spatial transformation) and averaged voxel-wise to produce the final prediction. This averaging reduces boundary uncertainty by aggregating predictions from multiple orientations.
+    \item \textbf{Computational cost:} TTA increases inference time by approximately a factor of 8 (one forward pass per augmentation) but is applied only at final inference, not during training.
+\end{itemize}
+
+TTA is a standard technique for improving segmentation consistency, particularly at anatomical boundaries where single-orientation predictions may exhibit orientation-dependent artifacts.
+
+\subsection{Post-Processing}
+
+Raw model predictions may contain small spurious connected components---false-positive detections in regions of noise or ambiguous tissue. Post-processing removes these isolated blobs through connected-component analysis:
+
+\begin{itemize}
+    \item \textbf{Kidney mask:} Connected components with fewer than 5000 voxels are removed. This threshold eliminates small spurious predictions in non-renal regions while preserving true kidney structures, which typically occupy tens of thousands of voxels.
+    \item \textbf{Tumor/cyst mask:} Connected components with fewer than 100 voxels are removed. This threshold was selected conservatively to preserve small true lesions (some tumors occupy under 100 voxels) while eliminating pixel-level noise.
+\end{itemize}
+
+The conservative tumor threshold prioritizes detection sensitivity over precision, consistent with the decision-support role of the system. Retaining some false positives is acceptable because physician review will identify and dismiss them; false negatives (missed small tumors) are more consequential.
+
+Only the largest connected component per class is not enforced. Small kidney or tumor components that are anatomically plausible are retained, acknowledging that some cases present with multiple lesions or bilateral anatomy.
+
+\subsection{Volumetric Statistics}
+
+From the post-processed segmentation mask, volumetric statistics are computed to summarize segmentation results:
+
+\begin{itemize}
+    \item \textbf{Kidney volume (ml):} Total kidney volume computed as the number of kidney-class voxels multiplied by the voxel volume (product of voxel spacing in mm along each axis, converted to milliliters).
+    \item \textbf{Tumor/cyst volume (ml):} Total tumor/cyst volume computed analogously.
+    \item \textbf{Tumor detection status:} Binary indicator of whether any tumor/cyst-class voxels are present in the segmentation, corresponding to the tumor detection rate metric.
+\end{itemize}
+
+These statistics provide quantitative information that can assist volumetric assessment in a review context. Volumes are computed using the voxel spacing metadata from the input NIfTI file, ensuring physical measurement accuracy.
+
+\subsection{Web Visualization Output}
+
+The final pipeline output is delivered through a browser-based web application that provides interactive 3D visualization of segmentation results:
+
+\begin{itemize}
+    \item \textbf{3D mesh rendering:} The kidney and tumor/cyst segmentation masks are converted to 3D surface meshes using the marching cubes algorithm, rendered interactively in a WebGL-based viewer.
+    \item \textbf{Volumetric statistics display:} Kidney volume, tumor/cyst volume, and tumor detection status are displayed alongside the 3D visualization.
+    \item \textbf{Interaction:} Users can rotate, zoom, and pan the 3D view to inspect segmentation results from any angle. Individual classes (kidney, tumor/cyst) can be toggled on or off.
+    \item \textbf{Decision-support framing:} The web interface includes an explicit disclaimer stating that NephroVision is an academic prototype for decision-support use and that all segmentation results require physician review.
+\end{itemize}
+
+The web visualization completes the pipeline, transforming voxel-level model predictions into an accessible format suitable for physician review. The interface is designed to augment radiologist interpretation rather than replace it.

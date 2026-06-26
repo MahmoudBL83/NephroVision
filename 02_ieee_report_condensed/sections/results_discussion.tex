@@ -1,0 +1,53 @@
+\section{Results and Discussion}
+
+\subsection{Evaluation Metrics}
+
+Three metrics evaluate segmentation performance:
+
+\begin{itemize}
+    \item \textbf{Dice Similarity Coefficient (DSC):} Volumetric overlap between predicted and ground-truth segmentations: $\text{DSC} = 2|P \cap G| / (|P| + |G|)$. Ranges from 0 (no overlap) to 1 (perfect overlap).
+    \item \textbf{95th Percentile Hausdorff Distance (HD95):} Boundary accuracy measured as 95th percentile of surface-to-surface distances (mm). Lower values indicate better boundary agreement.
+    \item \textbf{Tumor Detection Rate:} Proportion of test cases correctly identified as containing tumor/cyst voxels.
+\end{itemize}
+
+\subsection{Performance Results}
+
+\input{tables/results_acceptance.tex}
+
+Table~\ref{tab:results_acceptance} presents final test set performance on 64 independent held-out KiTS23 cases and comparison against project acceptance criteria. All six criteria are met with PASS status.
+
+The model demonstrates robust kidney segmentation with Dice of $0.9307 \pm 0.064$, indicating consistent and accurate delineation across diverse cases. Tumor segmentation achieves Dice of $0.6558 \pm 0.262$, reflecting moderate but variable performance. The mean Dice across kidney and tumor classes is $0.7933$. Tumor detection rate is $100\%$ ($64/64$), indicating the model identifies tumor presence in every test case containing a tumor.
+
+Boundary precision metrics confirm this pattern: HD95 for kidney is $19.98$ mm, reflecting reasonably precise boundaries. HD95 for tumor is $67.35$ mm, indicating substantial boundary uncertainty consistent with the standard deviation of tumor Dice.
+
+\subsection{Results Interpretation}
+
+\textbf{Kidney segmentation is robust and consistent.} The high Dice ($0.9307 \pm 0.064$) and moderate HD95 ($19.98$ mm) indicate reliable kidney boundary identification. The low standard deviation ($0.064$) suggests consistent performance with few outliers. This performance is attributable to consistent kidney morphology, large spatial extent, and clear contrast boundary between parenchyma and surrounding fat.
+
+\textbf{Tumor segmentation is moderate and variable.} The tumor Dice of $0.6558 \pm 0.262$ with large standard deviation reflects substantial case-to-case variability. This is expected given inherent challenges:
+
+\begin{itemize}
+    \item \textbf{Small lesion size:} Small tumors (tens to hundreds of voxels) are difficult to segment accurately. A few voxels of boundary displacement causes large proportional Dice reduction for small structures.
+    \item \textbf{Boundary ambiguity:} Tumor boundaries are often indistinct on CT, particularly for infiltrative tumors, thin-walled cysts, and masses adjacent to parenchyma with similar enhancement.
+    \item \textbf{Heterogeneous appearance:} Tumors span diverse pathologies (solid, cystic, necrotic, calcified) not captured by a single learned representation. The merged tumor/cyst class further increases intra-class variability.
+\end{itemize}
+
+\textbf{Detection rate is not segmentation accuracy.} The $100\%$ detection rate indicates correct tumor presence identification in every case. However, a case can be correctly detected while having low Dice if boundaries are imprecise. Detection rate reflects sensitivity to tumor presence, not precision in delineating extent.
+
+\subsection{Comparison with Acceptance Criteria}
+
+All acceptance criteria are satisfied:
+\begin{itemize}
+    \item Kidney Dice $0.9307$ exceeds $\geq 0.85$ target.
+    \item Tumor Dice $0.6558$ exceeds $\geq 0.50$ target.
+    \item Mean Dice $0.7933$ exceeds $\geq 0.65$ target.
+    \item HD95 Kidney $19.98$ mm below $< 30$ mm threshold.
+    \item HD95 Tumor $67.35$ mm below $< 100$ mm threshold.
+    \item Tumor Detection $100\%$ exceeds $\geq 90\%$ target.
+\end{itemize}
+
+Meeting these criteria indicates the system achieves predefined performance targets for an academic prototype. However, meeting acceptance criteria does not imply clinical readiness. The criteria were defined for the graduation project context, not for regulatory approval or clinical deployment.
+
+\subsection{Analytical Validation Scope}
+
+All results are based on analytical validation using the project-defined 64-case held-out evaluation subset. This validation is internal to the dataset and does not constitute clinical validation. No prospective clinical trial was conducted, no independent external dataset was used, no comparison against human expert performance was performed, and no assessment of clinical impact was conducted. These results demonstrate technical performance under controlled conditions. Clinical validation is identified as future work.

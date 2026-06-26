@@ -1,0 +1,30 @@
+% Table: Dataset and Configuration
+% Used in: 05_dataset_exploration.tex, 10_evaluation_results.tex
+% TODO: Fill in missing details (training/validation split, exact case counts, image dimensions).
+
+\begin{table}[!t]
+\caption{Dataset and System Configuration}
+\label{tab:dataset_config}
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Property} & \textbf{Value} \\
+\midrule
+Dataset & KiTS23 (Kidney Tumor Segmentation Challenge 2023) \\
+Modality & Contrast-enhanced abdominal CT \\
+Format & NIfTI (\texttt{.nii} / \texttt{.nii.gz}) \\
+Classes & Background, Kidney, Tumor/Cyst \\
+Training cases & TODO \\
+Validation cases & TODO \\
+Test cases & 64 (independent held-out) \\
+HU clipping range & $[-200, 300]$ \\
+Normalization & $[0, 1]$ (min-max) \\
+Model & 3D U-Net \\
+Inference patch size & $64 \times 192 \times 192$ voxels \\
+Overlap & 50\% \\
+Test-time augmentation & 8 flip combinations \\
+Kidney blob threshold & $< 5000$ voxels removed \\
+Tumor blob threshold & $< 100$ voxels removed \\
+\bottomrule
+\end{tabular}
+\end{table}

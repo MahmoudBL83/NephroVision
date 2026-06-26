@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <style>
+      .text { font-family: 'Inter', -apple-system, sans-serif; }
+      .title { font-size: 28px; font-weight: 700; fill: #1a1a1a; text-anchor: middle; }
+      .subtitle { font-size: 14px; font-weight: 400; fill: #8a8a8a; text-anchor: middle; }
+      .box-title { font-size: 13px; font-weight: 600; fill: #1a1a1a; text-anchor: middle; }
+      .box-label { font-size: 10px; font-weight: 500; fill: #8a8a8a; text-anchor: middle; letter-spacing: 0.05em; }
+      .arrow { fill: none; stroke: #d0d0d0; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d0d0d0"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="540" fill="#fafafa"/>
+
+  <text x="480" y="55" class="title">NephroVision System Pipeline</text>
+  <text x="480" y="82" class="subtitle">End-to-end automated kidney and tumor segmentation</text>
+
+  <!-- Pipeline boxes -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="200" width="120" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="220" y="200" width="120" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="380" y="200" width="120" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="540" y="200" width="120" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="700" y="200" width="120" height="100" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+    <rect x="820" y="200" width="120" height="100" rx="10" fill="#f0f7f4" stroke="#2d6a4f" stroke-width="1.5"/>
+  </g>
+
+  <!-- Labels -->
+  <text x="120" y="235" class="box-title">NIfTI CT</text>
+  <text x="120" y="255" class="box-title">Volume</text>
+  <text x="120" y="278" class="box-label">INPUT</text>
+
+  <text x="280" y="235" class="box-title">Preprocessing</text>
+  <text x="280" y="255" class="box-title">HU + Norm</text>
+  <text x="280" y="278" class="box-label">CLIP &amp; SCALE</text>
+
+  <text x="440" y="235" class="box-title">3D U-Net</text>
+  <text x="440" y="255" class="box-title">Segmentation</text>
+  <text x="440" y="278" class="box-label">MODEL</text>
+
+  <text x="600" y="235" class="box-title">Sliding Window</text>
+  <text x="600" y="255" class="box-title">+ TTA</text>
+  <text x="600" y="278" class="box-label">INFERENCE</text>
+
+  <text x="760" y="235" class="box-title">Post-</text>
+  <text x="760" y="255" class="box-title">Processing</text>
+  <text x="760" y="278" class="box-label">FILTER</text>
+
+  <text x="880" y="235" class="box-title" style="fill: #2d6a4f;">3D Viewer</text>
+  <text x="880" y="255" class="box-title" style="fill: #2d6a4f;">+ Volumes</text>
+  <text x="880" y="278" class="box-label" style="fill: #2d6a4f;">OUTPUT</text>
+
+  <!-- Arrows -->
+  <line x1="180" y1="250" x2="210" y2="250" class="arrow"/>
+  <line x1="340" y1="250" x2="370" y2="250" class="arrow"/>
+  <line x1="500" y1="250" x2="530" y2="250" class="arrow"/>
+  <line x1="660" y1="250" x2="690" y2="250" class="arrow"/>
+  <line x1="820" y1="250" x2="810" y2="250" class="arrow"/>
+
+  <!-- Footer -->
+  <text x="480" y="360" style="font-size: 11px; fill: #b0b0b0; text-anchor: middle;">Decision-Support Only · Not Clinically Approved · Physician Review Required</text>
+</svg>
