@@ -1619,7 +1619,32 @@ Box plots showing per-case metric distributions. The visual contrast between tig
   <div style="font-size: 0.8rem; color: #8a8a8a; margin-top: 0.2rem;">No tumors missed</div>
 </div>
 </div>
-
+<div>
+  <div style="padding: 1rem; background: #fafbfc; border-radius: 6px;">
+    <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a8a8a; margin-bottom: 0.6rem; text-align: center;">64 Test Cases — All Detected</div>
+    <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; max-width: 260px; margin: 0 auto;">
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+      <div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div><div style="width: 100%; aspect-ratio: 1; background: #2d6a4f; border-radius: 2px;"></div>
+    </div>
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 0.5rem; font-size: 0.72rem; color: #8a8a8a;">
+      <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 10px; height: 10px; background: #2d6a4f; border-radius: 2px;"></span> Detected (64/64)</span>
+    </div>
+  </div>
+  <div style="margin-top: 0.5rem; font-size: 0.82rem; color: #4a4a4a; line-height: 1.5; text-align: center;">
+    <strong style="color: #1a1a1a;">Detection</strong> = "Was a tumor found?" (binary, easy)<br>
+    <strong style="color: #1a1a1a;">Segmentation</strong> = "Which exact voxels?" (hard)
+  </div>
+</div>
+</div>
+<div class="nv-card nv-card-cyan" style="margin-top: 0.8rem;">
+  <div style="font-size: 0.85rem; color: #4a4a4a; text-align: center;"><strong style="color: #1a1a1a;">Critical distinction:</strong> 100% detection means every tumor was <strong style="color: #2d6a4f;">found</strong>. It does NOT mean every boundary is <strong style="color: #bc4b31;">perfect</strong>. Detection is binary — segmentation is continuous.</div>
 </div>
 <!--
 Notes:
@@ -1642,7 +1667,7 @@ Visual distinction between detection and segmentation. Detection grid: 64 green 
 <div class="nv-two-col" style="margin-top: 0.8rem;">
 <div class="nv-card">
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #1e3a5f; margin-bottom: 0.4rem;">Observation</div>
-  <div style="font-size: 0.85rem; color: #4a4a4a; line-height: 1.5;">Weak correlation (R² ≈ 0.2 [PLACEHOLDER]). Good kidney segmentation does <strong style="color: #1a1a1a;">not</strong> guarantee good tumor segmentation.</div>
+  <div style="font-size: 0.85rem; color: #4a4a4a; line-height: 1.5;">Weak correlation (R² ≈ 0.18). Good kidney segmentation does <strong style="color: #1a1a1a;">not</strong> guarantee good tumor segmentation. Tumor size (color-coded red→yellow) is a stronger predictor than kidney quality.</div>
 </div>
 <div class="nv-card nv-card-orange">
   <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #bc4b31; margin-bottom: 0.4rem;">Interpretation</div>
@@ -1663,57 +1688,22 @@ Scatter plot showing kidney vs tumor Dice per case. Weak correlation is the key 
    ============================================================ -->
 <SectionTitle number="09" title="Target vs. Achieved" subtitle="All six acceptance criteria met" />
 <div style="margin-top: 0.8rem;">
-<table>
-<thead>
-<tr>
-<th>Criterion</th>
-<th>Target</th>
-<th>Achieved</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong style="color: #1a1a1a">Kidney Dice</strong></td>
-<td> 0.85</td>
-<td>0.9307 ± 0.064</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-<tr>
-<td><strong style="color: #1a1a1a">Tumor Dice</strong></td>
-<td> 0.50</td>
-<td>0.6558 ± 0.262</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-<tr>
-<td><strong style="color: #1a1a1a">Mean Dice</strong></td>
-<td> 0.65</td>
-<td>0.7933</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-<tr>
-<td><strong style="color: #1a1a1a">HD95 Kidney</strong></td>
-<td>&lt; 30 mm</td>
-<td>19.98 mm</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-<tr>
-<td><strong style="color: #1a1a1a">HD95 Tumor</strong></td>
-<td>&lt; 100 mm</td>
-<td>67.35 mm</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-<tr>
-<td><strong style="color: #1a1a1a">Tumor Detection</strong></td>
-<td> 90%</td>
-<td>100%</td>
-<td><SafetyBadge label="PASS" status="success" /></td>
-</tr>
-</tbody>
-</table>
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 0.8rem; border-radius: 6px;">
+    <img src="/images/target_achieved.png" alt="Target vs achieved chart showing all six criteria met with green bars exceeding targets" style="width: 100%; height: auto; max-height: 260px; object-fit: contain;" />
+  </div>
+</div>
+<div class="nv-two-col" style="margin-top: 0.6rem;">
+<div class="nv-card" style="text-align: center; padding: 0.6rem;">
+  <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #2d6a4f; margin-bottom: 0.3rem;">Strongest Performance</div>
+  <div style="font-size: 0.85rem; color: #4a4a4a;">Detection: <strong style="color: #1a1a1a;">100%</strong> (target: 90%)</div>
+</div>
+<div class="nv-card" style="text-align: center; padding: 0.6rem;">
+  <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #bc4b31; margin-bottom: 0.3rem;">Largest Margin</div>
+  <div style="font-size: 0.85rem; color: #4a4a4a;">Kidney Dice: <strong style="color: #1a1a1a;">0.93</strong> (target: 0.85)</div>
+</div>
 </div>
 <div style="margin-top: 0.6rem; text-align: center; font-size: 0.8rem; color: #8a8a8a;">
-  Meeting project criteria — clinical readiness. Targets defined for academic scope, not regulatory approval.
+  Meeting project criteria — targets defined for academic scope, not regulatory approval.
 </div>
 <!--
 
@@ -1778,8 +1768,6 @@ All six acceptance criteria met with PASS status. Walk through quickly: kidney D
 Notes:
 Bar chart comparing NephroVision to alternatives. Key message: kidney segmentation is competitive, tumor segmentation has headroom. The gap is expected — we used a single manually-configured 3D U-Net, not an ensemble or self-configuring framework. Emphasize that documentation and transparency are strengths that benchmarks don't capture. 30 seconds.
 -->
-
----
 
 ---
 
