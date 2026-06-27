@@ -13,12 +13,12 @@ sections = [
     (10, 12, "03", "Background"),
     (13, 14, "04", "Pipeline Overview"),
     (15, 17, "05", "Preprocessing"),
-    (18, 21, "06", "Model"),
-    (22, 26, "07", "Inference"),
-    (27, 29, "08", "Challenges"),
-    (30, 36, "09", "Results"),
-    (37, 41, "10", "Limitations & Future"),
-    (42, 48, "11", "Closing"),
+    (18, 25, "06", "Model"),
+    (26, 30, "07", "Inference"),
+    (31, 33, "08", "Challenges"),
+    (34, 41, "09", "Results"),
+    (42, 46, "10", "Limitations & Future"),
+    (47, 50, "11", "Closing"),
 ]
 
 # Find all slides and their positions
