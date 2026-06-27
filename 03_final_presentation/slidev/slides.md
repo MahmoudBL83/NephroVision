@@ -1129,7 +1129,7 @@ Visual proof that training converged properly. Loss decreases steadily, validati
      SLIDE 24: INFERENCE PIPELINE
 
      ============================================================ -->
-<SectionTitle number="07" title="Inference Pipeline" subtitle="Sliding window + test-time augmentation" />
+<SectionTitle number="06" title="Inference Pipeline" subtitle="Sliding window + test-time augmentation" />
 <div class="nv-three-col" style="margin-top: 0.8rem;">
 <MetricCard label="Patch Size" value="64×192×192" subvalue="voxels per window" status="info" />
 <MetricCard label="Overlap" value="50%" subvalue="all 3 dimensions" status="info" />
@@ -1257,9 +1257,6 @@ Visual grid showing the 8 flip combinations. Process card explains the 4 steps. 
 </div>
 </div>
 </div>
-<div class="nv-svg-wrapper">
-  <img src="/images/postprocessing_workflow.svg" />
-</div>
 <!--
 
 Notes:
@@ -1272,7 +1269,31 @@ Post-processing removes spurious detections. Kidney: &lt;5000 voxels removed —
 
 <!-- ============================================================
 
-     SLIDE 28: POST-PROCESSING EFFECT
+     SLIDE 28: POST-PROCESSING WORKFLOW
+
+     ============================================================ -->
+<SectionTitle number="07" title="Post-Processing Workflow" subtitle="Step-by-step filtering pipeline" />
+<div style="margin-top: 1rem; display: flex; align-items: center; justify-content: center;">
+  <div class="nv-svg-wrapper" style="background: #fafbfc; padding: 1rem; border-radius: 6px; max-width: 90%;">
+    <img src="/images/postprocessing_workflow.svg" alt="Post-processing workflow diagram" style="width: 100%; height: auto; max-height: 380px; object-fit: contain;" />
+  </div>
+</div>
+<div class="nv-card" style="margin-top: 1rem;">
+  <div style="font-size: 0.85rem; color: #4a4a4a; line-height: 1.5; text-align: center;">
+    <strong style="color: #1a1a1a;">Pipeline:</strong> Raw prediction → Connected component analysis → Kidney blob filter (&lt;5000 voxels) → Tumor blob filter (&lt;100 voxels) → Cleaned mask
+  </div>
+</div>
+<!--
+
+Notes:
+Full workflow diagram on its own slide. Shows the 4-step post-processing pipeline: connected component labeling, kidney blob removal, tumor blob removal, final cleaned mask. 15 seconds.
+-->
+
+---
+
+<!-- ============================================================
+
+     SLIDE 29: POST-PROCESSING EFFECT
 
      ============================================================ -->
 <SectionTitle number="07" title="Post-Processing Effect" subtitle="Before and after conservative blob removal" />
@@ -1295,7 +1316,7 @@ Before/after visual comparison of post-processing. Shows that blob removal clean
 
 <!-- ============================================================
 
-     SLIDE 29: CLASS IMBALANCE CHALLENGE
+     SLIDE 30: CLASS IMBALANCE CHALLENGE
 
      ============================================================ -->
 <SectionTitle number="08" title="Class Imbalance" subtitle="Why tumor segmentation is fundamentally difficult" />
@@ -1330,7 +1351,7 @@ Class imbalance is the single biggest challenge in medical image segmentation. S
 
 <!-- ============================================================
 
-     SLIDE 30: KEY CHALLENGE — TUMOR/CYST
+     SLIDE 31: KEY CHALLENGE — TUMOR/CYST
 
      ============================================================ -->
 <SectionTitle number="08" title="Key Challenge: Tumor/Cyst Segmentation" subtitle="Why tumor Dice is lower than kidney Dice" />
@@ -1378,7 +1399,7 @@ EMPHASIS SLIDE — 90 seconds. The most important honesty slide. Why is tumor Di
 
 <!-- ============================================================
 
-     SLIDE 31: WEB APPLICATION
+     SLIDE 32: WEB APPLICATION
 
      ============================================================ -->
 <SectionTitle number="08" title="Web Application" subtitle="Browser-based 3D visualization — no specialized software" />
@@ -1437,7 +1458,7 @@ The web interface makes segmentation accessible without specialized software lik
 
 <!-- ============================================================
 
-   SLIDE 32: VALIDATION SETUP
+   SLIDE 33: VALIDATION SETUP
 
    ============================================================ -->
 <SectionTitle number="09" title="Validation Setup" subtitle="Independent held-out test — analytical validation only" />
@@ -1484,7 +1505,7 @@ The 64-case test set was selected before any model development and never used du
 
 <!-- ============================================================
 
-   SLIDE 33: RESULTS
+   SLIDE 34: RESULTS
 
    ============================================================ -->
 <SectionTitle number="09" title="Results" subtitle="Final test set performance — 64 independent held-out cases" />
@@ -1551,7 +1572,7 @@ THE MONEY SLIDE — 60 seconds. Walk through the numbers. Kidney Dice 0.9307 ± 
 
 <!-- ============================================================
 
-     SLIDE 34: METRIC DISTRIBUTION
+     SLIDE 35: METRIC DISTRIBUTION
 
      ============================================================ -->
 <SectionTitle number="09" title="Metric Distribution" subtitle="Per-case variability across the 64 test cases" />
@@ -1581,7 +1602,7 @@ Box plots showing per-case metric distributions. The visual contrast between tig
 
 <!-- ============================================================
 
-     SLIDE 35: DETECTION PERFORMANCE
+     SLIDE 36: DETECTION PERFORMANCE
 
      ============================================================ -->
 <SectionTitle number="09" title="Detection Performance" subtitle="Binary detection vs voxel-level segmentation" />
@@ -1609,7 +1630,7 @@ Visual distinction between detection and segmentation. Detection grid: 64 green 
 
 <!-- ============================================================
 
-     SLIDE 36: KIDNEY-TUMOR CORRELATION
+     SLIDE 37: KIDNEY-TUMOR CORRELATION
 
      ============================================================ -->
 <SectionTitle number="09" title="Kidney-Tumor Correlation" subtitle="Is good kidney segmentation predictive of good tumor segmentation?" />
@@ -1637,7 +1658,7 @@ Scatter plot showing kidney vs tumor Dice per case. Weak correlation is the key 
 
 <!-- ============================================================
 
-   SLIDE 37: TARGET VS ACHIEVED
+   SLIDE 38: TARGET VS ACHIEVED
 
    ============================================================ -->
 <SectionTitle number="09" title="Target vs. Achieved" subtitle="All six acceptance criteria met" />
@@ -1706,7 +1727,7 @@ All six acceptance criteria met with PASS status. Walk through quickly: kidney D
 
 <!-- ============================================================
 
-     SLIDE 38: BENCHMARK COMPARISON
+     SLIDE 39: BENCHMARK COMPARISON
 
      ============================================================ -->
 <SectionTitle number="09" title="Benchmark Comparison" subtitle="Where NephroVision stands against alternatives" />
@@ -1764,7 +1785,7 @@ Bar chart comparing NephroVision to alternatives. Key message: kidney segmentati
 
 <!-- ============================================================
 
-     SLIDE 39: ABLATION STUDY
+     SLIDE 40: ABLATION STUDY
 
      ============================================================ -->
 <SectionTitle number="09" title="Ablation Study" subtitle="What happens when we remove each component?" />
@@ -1798,7 +1819,7 @@ Ablation study proves each component matters. TTA is the single biggest contribu
 
 <!-- ============================================================
 
-   SLIDE 40: FAILURE ANALYSIS & LIMITATIONS
+   SLIDE 41: FAILURE ANALYSIS & LIMITATIONS
 
    ============================================================ -->
 <SectionTitle number="10" title="Failure Analysis & Limitations" subtitle="What fails, why, and what we did about it" />
@@ -1843,7 +1864,7 @@ EMPHASIS SLIDE — 75 seconds. Directly addresses mid-year feedback about docume
 
 <!-- ============================================================
 
-     SLIDE 41: FAILURE CASE GALLERY
+     SLIDE 42: FAILURE CASE GALLERY
 
      ============================================================ -->
 <SectionTitle number="10" title="Failure Case Gallery" subtitle="Three representative failures from the test set" />
@@ -1882,7 +1903,7 @@ Three concrete failure cases shown as visual cards. Each has a placeholder for t
 
 <!-- ============================================================
 
-     SLIDE 42: DOMAIN SHIFT RISK
+     SLIDE 43: DOMAIN SHIFT RISK
 
      ============================================================ -->
 <SectionTitle number="10" title="Domain Shift Risk" subtitle="The highest-priority limitation" />
@@ -1919,7 +1940,7 @@ Domain shift is the most critical limitation. Visual concept diagram shows scann
 
 <!-- ============================================================
 
-   SLIDE 43: SAFETY & IEC 62304
+   SLIDE 44: SAFETY & IEC 62304
 
    ============================================================ -->
 <SectionTitle number="10" title="Safety & IEC 62304" subtitle="Academic decision-support prototype — Class B" />
@@ -1975,7 +1996,7 @@ NephroVision is IEC 62304 Class B. Why? Decision-support, not autonomous. Physic
 
 <!-- ============================================================
 
-   SLIDE 44: FUTURE WORK
+   SLIDE 45: FUTURE WORK
 
    ============================================================ -->
 <SectionTitle number="10" title="Future Work" subtitle="Prioritized directions for improvement" />
@@ -2012,7 +2033,7 @@ Prioritized future directions. High priority: improve tumor boundaries (boundary
 
 <!-- ============================================================
 
-     SLIDE 45: EXPERIMENT LOG
+     SLIDE 46: EXPERIMENT LOG
 
      ============================================================ -->
 <SectionTitle number="11" title="Experiment Log" subtitle="Documented iterative development — hypothesis to decision" />
@@ -2039,7 +2060,7 @@ Six major experimental phases, each documented with hypothesis, setup, result, a
 
 <!-- ============================================================
 
-     SLIDE 46: REPRODUCIBILITY ARTIFACTS
+     SLIDE 47: REPRODUCIBILITY ARTIFACTS
 
      ============================================================ -->
 <SectionTitle number="11" title="Reproducibility Artifacts" subtitle="Everything needed to replicate our work" />
@@ -2091,7 +2112,7 @@ Eight reproducibility artifacts listed as numbered cards. Emphasize that reprodu
 
 <!-- ============================================================
 
-     SLIDE 47: ETHICAL CONSIDERATIONS
+     SLIDE 48: ETHICAL CONSIDERATIONS
 
      ============================================================ -->
 <SectionTitle number="11" title="Ethical Considerations" subtitle="Patient data, bias, and clinical deployment ethics" />
@@ -2129,7 +2150,7 @@ Medical AI must address ethics. We use de-identified public data, acknowledge da
 
 <!-- ============================================================
 
-   SLIDE 48: FINAL TAKEAWAY
+   SLIDE 49: FINAL TAKEAWAY
 
    ============================================================ -->
 <div class="nv-center" style="position: relative; z-index: 1;">
@@ -2172,7 +2193,7 @@ End strong. Three numbers: kidney Dice 0.9307 (robust), tumor detection 100% (re
 
 <!-- ============================================================
 
-     SLIDE 49: KEY REFERENCES
+     SLIDE 50: KEY REFERENCES
 
      ============================================================ -->
 <SectionTitle number="11" title="Key References" subtitle="Foundational papers and standards supporting this work" />
@@ -2199,7 +2220,7 @@ Six key references: 3D U-Net (our architecture), nnU-Net (future work benchmark)
 
 <!-- ============================================================
 
-     SLIDE 50: Q&A
+     SLIDE 51: Q&A
 
      ============================================================ -->
 <div class="nv-center" style="position: relative; z-index: 1;">
